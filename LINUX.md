@@ -1,625 +1,250 @@
-# คู่มือคำสั่ง Linux พื้นฐาน
+# คู่มือคำสั่ง Linux พื้นฐานสำหรับ Vibe Coding และนักวิทยาศาสตร์
 
-เอกสารรวบรวมคำสั่ง Linux ที่ใช้บ่อย แบ่งตามหมวดหมู่ พร้อมตัวอย่างการใช้งาน
-
----
-
-## สารบัญ
-
-1. [File System](#1-file-system)
-2. [Process Monitoring](#2-process-monitoring)
-3. [Network](#3-network)
-4. [System Status](#4-system-status)
-5. [Developer Tools](#5-developer-tools)
+เอกสารรวบรวมคำสั่ง Linux สำหรับผู้ที่ใช้งาน Windows มาทั้งชีวิต แล้วย้ายมาเรียนรู้ Linux เพื่อพัฒนาโปรแกรมแบบ Vibe Coding (ใช้งานร่วมกับ CLI AI Agents เช่น Claude Code)
 
 ---
 
-## 1. File System
+## ⚡ คำสั่งที่ต้องรู้ก่อน / ควรรู้ก่อน (Linux Essential Cheatsheet)
 
-คำสั่งสำหรับจัดการไฟล์และไดเรกทอรี
+คำสั่งพื้นฐานระดับวิกฤตที่ต้องรู้ก่อนเริ่มต้นใช้งาน Linux สามารถคัดลอกบล็อกคำสั่งด้านล่างนี้ไปวางลงใน Linux Terminal ได้ทันทีทุกบรรทัด:
 
-### 1.1 การดูและเปลี่ยนตำแหน่ง
-
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `pwd` | แสดงตำแหน่งปัจจุบัน (print working directory) |
-| `ls` | แสดงรายการไฟล์/โฟลเดอร์ |
-| `cd` | เปลี่ยนไดเรกทอรี |
-
-**ตัวอย่าง:**
 ```bash
-pwd                          # ดูตำแหน่งปัจจุบัน เช่น /home/user
-ls                           # แสดงรายการแบบสั้น
-ls -l                        # แสดงรายการแบบละเอียด (สิทธิ์, เจ้าของ, ขนาด, วันที่)
-ls -la                       # รวมไฟล์ซ่อน (dotfile)
-ls -lh                       # แสดงขนาดเป็นหน่วยที่อ่านง่าย (KB, MB)
-ls -lt                       # เรียงตามเวลาแก้ไข (ใหม่ก่อน)
-ls -ltr                      # เรียงตามเวลา (เก่าก่อน)
-cd /var/log                  # เข้าไดเรกทอรี /var/log
-cd ~                         # กลับ home directory
-cd ..                        # ขึ้นไปหนึ่งระดับ
-cd -                         # กลับไดเรกทอรีก่อนหน้า
-```
+# 1. ดูตำแหน่งไดเรกทอรีปัจจุบันที่คุณอยู่ (เทียบเท่าการดูแถบที่อยู่ C:\Users\... ใน Windows)
+pwd
 
-### 1.2 การสร้าง คัดลอก ย้าย ลบ
+# 2. แสดงรายการไฟล์และโฟลเดอร์ทั้งหมดแบบละเอียด รวมถึงไฟล์ซ่อน (Dotfiles)
+ls -la
 
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `mkdir` | สร้างไดเรกทอรี |
-| `touch` | สร้างไฟล์เปล่า / อัปเดตเวลาไฟล์ |
-| `cp` | คัดลอกไฟล์/โฟลเดอร์ |
-| `mv` | ย้ายหรือเปลี่ยนชื่อ |
-| `rm` | ลบไฟล์/โฟลเดอร์ |
+# 3. สร้างโฟลเดอร์สำหรับเก็บโปรเจกต์งานวิจัยและโค้ด Vibe Coding
+mkdir -p ~/vibe-projects/research-data
 
-**ตัวอย่าง:**
-```bash
-mkdir projects                # สร้างโฟลเดอร์ชื่อ projects
-mkdir -p a/b/c                # สร้างโฟลเดอร์ซ้อนกันทีเดียว (parent ด้วย)
-touch file.txt                # สร้างไฟล์เปล่า
-cp file.txt backup.txt        # คัดลอกไฟล์
-cp -r folder1 folder2         # คัดลอกทั้งโฟลเดอร์ (recursive)
-mv old.txt new.txt            # เปลี่ยนชื่อไฟล์
-mv file.txt /tmp/             # ย้ายไฟล์ไป /tmp
-rm file.txt                   # ลบไฟล์
-rm -r folder                  # ลบโฟลเดอร์พร้อมเนื้อหา
-rm -rf folder                 # ลบโดยไม่ถาม (ระวัง!)
-```
+# 4. ย้ายตำแหน่งเข้าไปในโฟลเดอร์งานวิจัยที่เพิ่งสร้าง
+cd ~/vibe-projects/research-data
 
-### 1.3 การดูเนื้อหาไฟล์
+# 5. สร้างไฟล์ทดสอบข้อความสำหรับบันทึกโน้ต
+touch experiment_note.txt
 
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `cat` | แสดงเนื้อหาทั้งหมด |
-| `less` / `more` | ดูทีละหน้า |
-| `head` | ดูส่วนต้น |
-| `tail` | ดูส่วนท้าย |
-| `wc` | นับบรรทัด/คำ/ตัวอักษร |
+# 6. เขียนข้อความลงในไฟล์ทดสอบ (ส่งผลให้เนื้อหาถูกบันทึกทับไฟล์)
+echo "Scientific Data Processing with Linux & Vibe Coding" > experiment_note.txt
 
-**ตัวอย่าง:**
-```bash
-cat /etc/hostname             # ดูเนื้อหาไฟล์
-cat -n file.txt               # แสดงพร้อมเลขบรรทัด
-less /var/log/syslog          # ดูทีละหน้า (กด q ออก, / ค้นหา)
-head -n 20 file.txt           # ดู 20 บรรทัดแรก
-tail -n 50 /var/log/syslog    # ดู 50 บรรทัดสุดท้าย
-tail -f /var/log/syslog       # ติดตาม log แบบเรียลไทม์ (follow)
-wc -l file.txt                # นับจำนวนบรรทัด
-wc -w file.txt                # นับจำนวนคำ
-```
+# 7. อ่านเนื้อหาในไฟล์ข้อความออกมาแสดงผลบนเทอร์มินัล
+cat experiment_note.txt
 
-### 1.4 การค้นหาและกรอง
+# 8. ตรวจสอบพื้นที่ดิสก์ที่เหลืออยู่บนระบบแบบหน่วยที่อ่านง่าย (GB, MB)
+df -h
 
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `find` | ค้นหาไฟล์ตามเงื่อนไข |
-| `grep` | ค้นหาข้อความในไฟล์ |
-| `locate` | ค้นหาไฟล์ผ่าน index (เร็วกว่า find) |
+# 9. ตรวจสอบหน่วยความจำ RAM ที่กำลังถูกใช้งานอยู่บนเครื่อง
+free -h
 
-**ตัวอย่าง:**
-```bash
-find . -name "*.log"                    # หาไฟล์ .log ในโฟลเดอร์ปัจจุบัน
-find /var -type f -name "*.conf"        # หาไฟล์ทั้งหมด (type file)
-find . -type d -name "test"             # หาโฟลเดอร์ชื่อ test
-find . -mtime -7                        # ไฟล์ที่แก้ไขภายใน 7 วัน
-find . -size +100M                      # ไฟล์ใหญ่กว่า 100MB
-find . -name "*.tmp" -delete            # หาแล้วลบทันที
-
-grep "error" /var/log/syslog            # หาบรรทัดที่มีคำว่า error
-grep -i "error" file.log               # ไม่สนใจตัวเล็ก-ใหญ่
-grep -r "TODO" ./src                    # ค้นแบบ recursive ทั้งโฟลเดอร์
-grep -n "function" app.js               # แสดงเลขบรรทัดด้วย
-grep -v "debug" file.log                # แสดงบรรทัดที่ "ไม่มี" คำว่า debug
-grep -c "error" file.log               # นับจำนวนบรรทัดที่ตรง
-```
-
-### 1.5 สิทธิ์และเจ้าของไฟล์
-
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `chmod` | เปลี่ยนสิทธิ์ไฟล์ |
-| `chown` | เปลี่ยนเจ้าของไฟล์ |
-| `chgrp` | เปลี่ยนกลุ่มเจ้าของ |
-
-โครงสร้างสิทธิ์: `rwx` = read (4) + write (2) + execute (1)
-
-**ตัวอย่าง:**
-```bash
-chmod 755 script.sh          # owner=rwx, group=rx, others=rx
-chmod 644 config.txt         # owner=rw, group=r, others=r
-chmod +x deploy.sh           # เพิ่มสิทธิ์ execute
-chmod -R 755 folder          # เปลี่ยนทั้งโฟลเดอร์ (recursive)
-chown user:group file.txt    # เปลี่ยนเจ้าของและกลุ่ม
-chown user file.txt          # เปลี่ยนเจ้าของเท่านั้น
-chown -R user:group folder   # เปลี่ยนทั้งโฟลเดอร์
-```
-
-### 1.6 การบีบอัดและคลังเก็บ
-
-**ตัวอย่าง:**
-```bash
-tar -cvf archive.tar folder/      # สร้าง tar (c=สร้าง, v=แสดงรายละเอียด, f=ไฟล์)
-tar -xvf archive.tar              # แตกไฟล์ tar
-tar -czvf archive.tar.gz folder/  # สร้าง tar.gz (บีบอัดด้วย gzip)
-tar -xzvf archive.tar.gz          # แตก tar.gz
-tar -xzvf archive.tar.gz -C /tmp  # แตกไปไว้ที่ /tmp
-zip -r archive.zip folder/        # สร้าง zip
-unzip archive.zip                 # แตก zip
+# 10. ล้างหน้าจอเทอร์มินัลให้สะอาดเพื่อเริ่มทำงานใหม่
+clear
 ```
 
 ---
 
-## 2. Process Monitoring
+## 🎯 สถานการณ์ตัวอย่าง: นักวิทยาศาสตร์ย้ายจาก Windows มาใช้ Linux ทำ Vibe Coding
 
-คำสั่งสำหรับดูและจัดการโปรเซส
+> **Scenario:** คุณเป็นนักวิทยาศาสตร์ที่เคยจัดการไฟล์ข้อมูลงานวิจัย (.csv, .json) ผ่าน Windows File Explorer และเปิดโปรแกรมสเปรดชีต วันนี้คุณต้องย้ายมาใช้ Linux Server ที่มี GPU เพื่อรันการประมวลผลข้อมูลและใช้ AI Agent (เช่น Claude Code) ในการช่วยสร้างสคริปต์วิเคราะห์ข้อมูลแบบ Vibe Coding
 
-### 2.1 ดูโปรเซส
+---
 
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `ps` | แสดงสแนปชอตโปรเซส |
-| `top` | ดูโปรเซสเรียลไทม์ |
-| `htop` | top แบบโต้ตอบสวยงาม (ติดตั้งเพิ่ม) |
-| `pgrep` | หา PID ตามชื่อ |
+## 1. การจัดการไฟล์และโฟลเดอร์ (File & Directory Management)
 
-**ตัวอย่าง:**
+### 🎯 สิ่งที่ต้องการเรียนรู้
+- การดูตำแหน่ง การสร้าง ย้าย ลบ และอ่านเนื้อหาไฟล์ข้อมูลวิจัย
+- การตั้งสิทธิ์ (Permissions) เพื่อให้สคริปต์รันได้อย่างถูกต้อง
+
 ```bash
-ps                         # โปรเซสในเชลล์ปัจจุบัน
-ps aux                     # โปรเซสทั้งหมดของระบบ (แบบ BSD)
-ps -ef                     # โปรเซสทั้งหมด (แบบ System V)
-ps aux | grep nginx        # หาโปรเซส nginx
-top                        # มอนิเตอร์แบบเรียลไทม์ (กด q ออก)
-htop                       # มอนิเตอร์แบบโต้ตอบ
-pgrep -fl nginx            # หา PID ของ nginx พร้อมชื่อเต็ม
-```
+# 1. ดูตำแหน่งปัจจุบันที่คุณกำลังทำงานอยู่
+pwd
 
-คอลัมน์สำคัญใน `ps`/`top`:
-- `PID` — รหัสโปรเซส
-- `%CPU` / `%MEM` — การใช้ CPU/หน่วยความจำ
-- `STAT` — สถานะ (R=รัน, S=นอน, Z=ซอมบี้)
-- `COMMAND` — คำสั่งที่รัน
+# 2. สร้างโฟลเดอร์ซ้อนกันสำหรับจัดเก็บข้อมูลดิบ (raw) และข้อมูลที่ประมวลผลแล้ว (processed)
+mkdir -p ~/research/raw_data ~/research/processed_data
 
-### 2.2 จัดการโปรเซส
+# 3. ย้ายเข้าไปในโฟลเดอร์ข้อมูลดิบ
+cd ~/research/raw_data
 
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `kill` | ส่งสัญญาณไปยังโปรเซส |
-| `killall` | ฆ่าโปรเซสตามชื่อ |
-| `pkill` | ฆ่าโปรเซสตามชื่อ/รูปแบบ |
-| `jobs` / `fg` / `bg` | จัดการงานเบื้องหลัง |
+# 4. จำลองการสร้างไฟล์ข้อมูลผลการทดลองแบบ CSV
+echo "id,sample_name,value" > sample_01.csv
+echo "1,protein_A,98.5" >> sample_01.csv
+echo "2,protein_B,104.2" >> sample_01.csv
 
-สัญญาณที่ใช้บ่อย:
-- `SIGTERM` (15) — ขอให้จบอย่างสะอาด (ค่าเริ่มต้น)
-- `SIGKILL` (9) — บังคับฆ่าทันที (ไม่สามารถดักได้)
-- `SIGHUP` (1) — แฮงก์อัป / โหลดคอนฟิกใหม่
+# 5. ดูเนื้อหาในไฟล์ CSV ที่เพิ่งสร้างขึ้นมา
+cat sample_01.csv
 
-**ตัวอย่าง:**
-```bash
-kill 1234                   # ขอให้โปรเซส PID 1234 จบ
-kill -9 1234                # บังคับฆ่า
-kill -15 1234               # ขอจบอย่างสะอาด (เหมือนค่าเริ่มต้น)
-killall nginx               # ฆ่าโปรเซสชื่อ nginx ทั้งหมด
-pkill -f "python app.py"    # ฆ่าตามรูปแบบคำสั่งเต็ม
-jobs                        # ดูงานเบื้องหลัง
-fg %1                       # นำงาน %1 กลับมาเบื้องหน้า
-bg %2                       # ให้งาน %2 รันเบื้องหลังต่อ
-Ctrl+Z                      # พักงานปัจจุบันไปเบื้องหลัง
-Ctrl+C                      # ยกเลิกงานปัจจุบัน
-```
+# 6. คัดลอกไฟล์ข้อมูลดิบไปยังโฟลเดอร์สำรองข้อมูล
+cp sample_01.csv sample_01_backup.csv
 
-### 2.3 การรันเบื้องหลังและเซสชันถาวร
+# 7. เปลี่ยนชื่อไฟล์สำรองเพื่อความเป็นระเบียบ
+mv sample_01_backup.csv sample_01_archive.csv
 
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `nohup` | รันโดยไม่ตายเมื่อปิดเทอร์มินัล |
-| `&` | รันเบื้องหลัง |
-| `screen` / `tmux` | เซสชันเทอร์มินัลถาวร |
+# 8. ดูเฉพาะ 2 บรรทัดแรกของไฟล์ข้อมูล (ดู Header ของ CSV)
+head -n 2 sample_01.csv
 
-**ตัวอย่าง:**
-```bash
-python app.py &                  # รันเบื้องหลัง
-nohup python app.py &            # รันเบื้องหลัง ไม่ตายตอนปิดเทอร์มินัล
-nohup python app.py > app.log 2>&1 &   # เก็บ log ด้วย
-disown                           # ตัดงานออกจากเชลล์ปัจจุบัน
-tmux new -s mysession            # สร้างเซสชัน tmux
-tmux attach -t mysession         # เข้าเซสชันอีกครั้ง
+# 9. นับจำนวนบรรทัดของไฟล์ข้อมูลวิจัย
+wc -l sample_01.csv
+
+# 10. ค้นหาคำว่า 'protein_A' ในไฟล์ CSV
+grep "protein_A" sample_01.csv
+
+# 11. ให้สิทธิ์การรัน (Execute) แก่ไฟล์สคริปต์ Python หรือ Bash
+chmod +x sample_01.csv
+
+# 12. ลบไฟล์สำรองเมื่อไม่ใช้งานแล้ว
+rm sample_01_archive.csv
 ```
 
 ---
 
-## 3. Network
+## 2. การจัดการโปรเซสและการมอนิเตอร์ (Process Monitoring & Management)
 
-คำสั่งสำหรับตรวจสอบและจัดการเครือข่าย
+### 🎯 สิ่งที่ต้องการเรียนรู้
+- ตรวจสอบทรัพยากรเครื่องขณะรันโมเดล AI หรือสคริปต์ประมวลผลข้อมูล
+- การยกเลิกโปรเซสค้าง (Kill Process) เวลาสคริปต์ทำงานผิดพลาด
 
-### 3.1 ตรวจสอบการเชื่อมต่อ
-
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `ping` | ทดสอบการเชื่อมต่อไปโฮสต์ |
-| `traceroute` / `tracepath` | ดูเส้นทางแพ็กเก็ต |
-| `curl` | ส่ง HTTP request |
-| `wget` | ดาวน์โหลดไฟล์ |
-
-**ตัวอย่าง:**
 ```bash
-ping google.com                #  ping ไม่หยุด (Ctrl+C ออก)
-ping -c 4 google.com          # ping 4 ครั้งแล้วหยุด
-ping -i 2 8.8.8.8             # ping ทุก 2 วินาที
-traceroute google.com         # ดูเส้นทางไปยังโฮสต์
-curl https://example.com      # ดูเนื้อหาเว็บ
-curl -I https://example.com   # ดูเฉพาะ header (status code)
-curl -X POST https://api.com -d '{"k":"v"}' -H "Content-Type: application/json"
-curl -O https://getsamplefiles.com/download/zip/sample-1.zip   # ดาวน์โหลดเก็บเป็นไฟล์ (ชื่อเดิม)
-curl -o sample.zip https://getsamplefiles.com/download/zip/sample-1.zip   # ดาวน์โหลด ตั้งชื่อเอง
-wget https://getsamplefiles.com/download/zip/sample-1.zip    # ดาวน์โหลด
-wget -c https://getsamplefiles.com/download/zip/sample-1.zip # ดาวน์โหลดต่อ (continue)
-```
+# 1. ดูรายการโปรเซสที่กำลังทำงานอยู่ทั้งหมดบนระบบแบบละเอียด
+ps aux | head -n 15
 
-### 3.2 ดูการเชื่อมต่อและพอร์ต
+# 2. ค้นหาโปรเซสของ Python ที่กำลังรันงานประมวลผลอยู่
+ps aux | grep python
 
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `ss` | ดู socket/การเชื่อมต่อ (แทน netstat) |
-| `netstat` | ดูการเชื่อมต่อ (เก่ากว่า) |
-| `lsof` | ดูไฟล์/พอร์ตที่โปรเซสเปิดอยู่ |
-| `nslookup` / `dig` | ค้นหา DNS |
+# 3. ดูการทำงานของ CPU และ RAM แบบเรียลไทม์ (กด q เพื่อออกจากหน้าจอ)
+top
 
-**ตัวอย่าง:**
-```bash
-ss -tulpn                      # พอร์ตที่รอรับการเชื่อมต่อ (t=tcp, u=udp, l=listen, p=process, n=numeric)
-ss -tn                         # TCP connections ที่เปิดอยู่
-ss -tn state established        # เฉพาะที่เชื่อมต่อแล้ว
-netstat -tulpn                 # เหมือน ss (รุ่นเก่า)
-lsof -i :8080                  # ดูโปรเซสที่ใช้พอร์ต 8080
-lsof -i -P -n                  # ดูการเชื่อมต่อทั้งหมด
-lsof -p 1234                   # ไฟล์ที่โปรเซส PID 1234 เปิด
-nslookup google.com            # ค้น DNS
-dig google.com                 # ค้น DNS แบบละเอียด
-dig +short google.com          # เฉพาะผลลัพธ์ IP
-```
+# 4. สร้างการรันงานเบื้องหลัง (Background Task) จำลองการประมวลผล 100 วินาที
+sleep 100 &
 
-### 3.3 ดูข้อมูลเครือข่ายของเครื่อง
+# 5. ตรวจสอบรหัสโปรเซส (PID) ของงาน sleep ที่รันอยู่เบื้องหลัง
+pgrep -f "sleep 100"
 
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `ip` | ดู/ตั้งค่าเครือข่าย (แทน ifconfig) |
-| `ifconfig` | ดู network interface (เก่า) |
-| `hostname` | ดู/ตั้งชื่อเครื่อง |
-
-**ตัวอย่าง:**
-```bash
-ip addr                        # ดู IP ทั้งหมด
-ip a                           # แบบย่อ
-ip route                       # ดูตาราง routing / default gateway
-ip link                        # ดู network interface
-ip -s link                     # ดูสถิติ interface (rx/tx)
-hostname                       # ชื่อเครื่อง
-hostname -I                    # IP ของเครื่อง
-```
-
-### 3.4 ไฟร์วอลล์และการสแกน
-
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `iptables` | ไฟร์วอลล์ระดับเคอร์เนล |
-| `ufw` | ไฟร์วอลล์ง่าย (Ubuntu) |
-| `nmap` | สแกนพอร์ต (ติดตั้งเพิ่ม) |
-
-**ตัวอย่าง:**
-```bash
-sudo ufw status                # ดูสถานะไฟร์วอลล์
-sudo ufw allow 80/tcp          # เปิดพอร์ต 80
-sudo ufw allow from 192.168.1.0/24 to any port 22   # อนุญาตเฉพาะวง LAN
-sudo ufw enable                # เปิดไฟร์วอลล์
-nmap -sT localhost             # สแกนพอร์ต TCP ของเครื่องตัวเอง
-nmap -p 80,443 example.com     # สแกนพอร์ตเฉพาะ
+# 6. สั่งยุติโปรเซส sleep ที่รันอยู่เบื้องหลังอย่างปลอดภัยด้วย PID
+kill $(pgrep -f "sleep 100")
 ```
 
 ---
 
-## 4. System Status
+## 3. การใช้งาน tmux และการตั้งค่าลื่นไหลสำหรับ Claude Code (Terminal Multiplexer)
 
-คำสั่งสำหรับตรวจสอบสถานะและทรัพยากรของระบบ
+### 🎯 สิ่งที่ต้องการเรียนรู้
+- ติดตั้ง `tmux` บน Ubuntu Linux
+- ตั้งค่า `~/.tmux.conf` ให้ใช้เมาส์สโครลเลื่อนดูหน้าจอ (Scroll) ย้อนหลังอ่านคำตอบ AI ได้อย่างลื่นไหล
+- การรัน AI Agent ใน tmux เซสชัน ป้องกันเน็ตหลุดงานไม่หาย
 
-### 4.1 ข้อมูลระบบทั่วไป
+### 🧪 ขั้นตอนการติดตั้งและใช้งาน (Run Commands)
 
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `uname` | ข้อมูลเคอร์เนล/ระบบ |
-| `uptime` | เวลาทำงานและโหลดเฉลี่ย |
-| `whoami` | ผู้ใช้ปัจจุบัน |
-| `date` | วันที่และเวลา |
-
-**ตัวอย่าง:**
 ```bash
-uname -a                        # ข้อมูลระบบทั้งหมด
-uname -r                        # เวอร์ชันเคอร์เนล
-uptime                          # เวลาเปิดเครื่อง + load average (1/5/15 นาที)
-whoami                          # ชื่อผู้ใช้ปัจจุบัน
-date                            # วันที่/เวลาปัจจุบัน
-date "+%Y-%m-%d %H:%M:%S"       # รูปแบบกำหนดเอง
-```
+# 1. อัปเดตรายการแพ็กเกจของ Ubuntu
+sudo apt update
 
-### 4.2 หน่วยความจำและดิสก์
+# 2. ติดตั้งโปรแกรม tmux ลงบนระบบ Ubuntu
+sudo apt install -y tmux
 
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `free` | ดูหน่วยความจำ |
-| `df` | ดูพื้นที่ดิสก์ของ filesystem |
-| `du` | ดูขนาดไฟล์/โฟลเดอร์ |
-| `lsblk` | ดู block device (ดิสก์) |
+# 3. เขียนคอนฟิกตั้งค่าเปิดใช้งานเมาส์สโครลและขยายประวัติย้อนหลังลงใน ~/.tmux.conf
+cat << 'EOF' > ~/.tmux.conf
+# เปิดใช้งานเมาส์ ให้สโครลเลื่อนหน้าจอและคลิกเลือก pane ได้
+set -g mouse on
+# ขยายประวัติย้อนหลังเป็น 50,000 บรรทัด สำหรับอ่าน Output ยาวๆ จาก Claude Code
+set -g history-limit 50000
+# ตั้งค่าสีให้รองรับ True Color (256-color)
+set -g default-terminal "screen-256color"
+set -as terminal-overrides ",xterm*:Tc"
+# ลดเวลาหน่วงของปุ่ม Escape
+set -s escape-time 10
+EOF
 
-**ตัวอย่าง:**
-```bash
-free -h                         # หน่วยความจำแบบอ่านง่าย (h=human)
-free -m                         # หน่วยเป็น MB
-df -h                           # พื้นที่ดิสก์ทั้งหมด
-df -h /                         # เฉพาะ filesystem ของ /
-du -sh /var/log                 # ขนาดรวมของโฟลเดอร์
-du -h --max-depth=1 /var        # ขนาดแต่ละโฟลเดอร์ย่อย
-du -sh * | sort -h              # เรียงตามขนาด (หาไฟล์ใหญ่)
-lsblk                           # ดูดิสก์และพาร์ติชัน
-```
+# 4. โหลดคอนฟิก tmux ใหม่ทันที
+tmux source ~/.tmux.conf 2>/dev/null || echo "คอนฟิกพร้อมใช้งานเมื่อเปิด tmux ครั้งต่อไป"
 
-### 4.3 CPU และโหลด
+# 5. สร้างเซสชัน tmux ใหม่ชื่อ 'vibe-coding' สำหรับรัน Claude Code
+tmux new -s vibe-coding
 
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `top` / `htop` | ดูโหลดและโปรเซสเรียลไทม์ |
-| `vmstat` | สถิติระบบ (CPU, memory, I/O) |
-| `iostat` | สถิติ I/O ของดิสก์ |
-| `lscpu` | ข้อมูล CPU |
+# 6. ทดลองออกจากเซสชันชั่วคราว (Detach) กดปุ่ม: Ctrl+b แล้วตามด้วย d
 
-**ตัวอย่าง:**
-```bash
-top                             # มอนิเตอร์เรียลไทม์
-vmstat 1                        # สถิติระบบทุก 1 วินาที
-vmstat 1 5                      # 5 ครั้ง
-iostat -x 1                     # สถิติ I/O แบบละเอียด
-lscpu                           # ข้อมูล CPU (cores, ความเร็ว, architecture)
-nproc                           # จำนวน CPU core
-```
-
-### 4.4 ผู้ใช้และการล็อกอิน
-
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `who` | ผู้ใช้ที่ล็อกอินอยู่ |
-| `w` | ผู้ใช้ที่ล็อกอิน + กำลังทำอะไร |
-| `last` | ประวัติการล็อกอิน |
-| `id` | รหัสผู้ใช้/กลุ่ม |
-
-**ตัวอย่าง:**
-```bash
-who                             # ใครล็อกอินอยู่บนเครื่อง
-w                               # ล็อกอิน + โปรเซสที่รัน
-last                            # ประวัติล็อกอิน (อ่าน /var/log/wtmp)
-last -n 10                      # 10 รายการล่าสุด
-last -x reboot                  # ประวัติการรีบูต
-id                              # uid, gid ของตัวเอง
-id username                      # uid, gid ของผู้ใช้อื่น
-```
-
-### 4.5 การจัดการบริการ (systemd)
-
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `systemctl` | ควบคุมบริการ systemd |
-| `journalctl` | ดู log ของระบบ |
-
-**ตัวอย่าง:**
-```bash
-systemctl status nginx          # สถานะบริการ nginx
-systemctl start nginx           # เริ่มบริการ
-systemctl stop nginx            # หยุดบริการ
-systemctl restart nginx         # รีสตาร์ท
-systemctl reload nginx          # โหลดคอนฟิกใหม่โดยไม่ตัดการเชื่อมต่อ
-systemctl enable nginx          # ให้เริ่มอัตโนมัติตอนบูต
-systemctl disable nginx         # ยกเลิกเริ่มอัตโนมัติ
-systemctl list-units --type=service --state=running   # บริการที่รันอยู่
-journalctl -u nginx             # log ของ nginx
-journalctl -u nginx -f          # ติดตาม log แบบเรียลไทม์
-journalctl --since "1 hour ago" # log 1 ชั่วโมงที่แล้ว
-journalctl -p err               # เฉพาะ log ระดับ error
+# 7. ดึงเซสชัน 'vibe-coding' กลับขึ้นมาทำงานต่อ (Attach)
+tmux attach -t vibe-coding
 ```
 
 ---
 
-## 5. Developer Tools
+## 4. เครือข่ายและการดาวน์โหลดข้อมูลวิจัย (Networking & Data Fetching)
 
-คำสั่งที่นักพัฒนาใช้บ่อย
+### 🎯 สิ่งที่ต้องการเรียนรู้
+- การดาวน์โหลดไฟล์ชุดข้อมูล (Dataset) จากอินเทอร์เน็ตผ่าน URL
+- การตรวจสอบพอร์ตและการเชื่อมต่อเครือข่าย
 
-### 5.1 ตัวแปรและสภาพแวดล้อม
-
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `echo` | พิมพ์ข้อความ/ค่าตัวแปร |
-| `env` / `printenv` | ดูตัวแปรสภาพแวดล้อม |
-| `export` | ตั้งตัวแปรสภาพแวดล้อม |
-| `source` (`.`) | รันสคริปต์ในเชลล์ปัจจุบัน |
-
-**ตัวอย่าง:**
 ```bash
-echo "Hello"                    # พิมพ์ข้อความ
-echo $HOME                      # พิมพ์ค่าตัวแปร HOME
-echo $PATH                      # ดู PATH
-env                             # ดูตัวแปรสภาพแวดล้อมทั้งหมด
-printenv PATH                   # ดูค่าตัวแปรเฉพาะ
-export MY_VAR="value"          # ตั้งตัวแปร (ภายในเซสชัน)
-export PATH=$PATH:/usr/local/bin   # เพิ่ม path
-source ~/.bashrc                # โหลดคอนฟิกใหม่
-alias ll='ls -la'               # ตั้งชื่อย่อ
-which python3                   # หาตำแหน่งคำสั่ง
-```
+# 1. สอบถาม IP Address ของเครื่อง Linux Server เพื่อเชื่อมต่อ
+hostname -I
 
-### 5.2 การเชื่อมต่อและโอนย้ายไฟล์
+# 2. ทดสอบการเชื่อมต่อไปยังเซิร์ฟเวอร์ภายนอก (ส่ง ping 4 ครั้ง)
+ping -c 4 google.com
 
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `ssh` | เข้าเครื่องระยะไกล |
-| `scp` | คัดลอกไฟล์ผ่าน SSH |
-| `rsync` | ซิงค์ไฟล์ (มีประสิทธิภาพ) |
+# 3. ดาวน์โหลดไฟล์ตัวอย่างข้อมูลจาก URL มาเก็บไว้ในเครื่อง
+curl -o sample_data.json https://jsonplaceholder.typicode.com/todos/1
 
-**ตัวอย่าง:**
-```bash
-ssh user@192.168.1.10           # เข้าเครื่องระยะไกล
-ssh -p 2222 user@host          # ใช้พอร์ต 2222
-ssh -i key.pem user@host       # ใช้ private key
-ssh-keygen -t ed25519          # สร้างคู่กุญแจ SSH
-ssh-copy-id user@host          # ส่ง public key ไปเครื่องปลายทาง
-scp file.txt user@host:/tmp/   # อัปโหลดไฟล์
-scp user@host:/var/log/syslog .  # ดาวน์โหลดไฟล์
-scp -r folder user@host:/tmp/  # อัปโหลดทั้งโฟลเดอร์
-rsync -avz folder/ user@host:/backup/    # ซิงค์ไฟล์ (a=archive, v=verbose, z=compress)
-rsync -avz --delete src/ dest/ # ซิงค์และลบไฟล์ที่ปลายทางไม่มี
-```
+# 4. อ่านเนื้อหาในไฟล์ JSON ที่เพิ่งดาวน์โหลดลงมา
+cat sample_data.json
 
-### 5.3 การดาวน์โหลดและจัดการแพ็กเกจ
-
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `apt` | จัดการแพ็กเกจ (Debian/Ubuntu) |
-| `yum` / `dnf` | จัดการแพ็กเกจ (RHEL/CentOS/Fedora) |
-| `wget` / `curl` | ดาวน์โหลด |
-
-**ตัวอย่าง:**
-```bash
-sudo apt update                 # อัปเดตรายการแพ็กเกจ
-sudo apt upgrade                # อัปเกรดแพ็กเกจที่ติดตั้งไว้
-sudo apt install nginx          # ติดตั้ง nginx
-sudo apt remove nginx           # ลบ nginx (เก็บคอนฟิก)
-sudo apt purge nginx            # ลบพร้อมคอนฟิก
-apt search redis                # ค้นหาแพ็กเกจ
-apt show nginx                  ข้อมูลแพ็กเกจ
-sudo dnf install nginx          # สำหรับ Fedora/RHEL
-```
-
-### 5.4 ตัวกรองข้อความและไปป์ไลน์
-
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `|` | ไปป์ (ส่งเอาต์พุตเป็นอินพุต) |
-| `>` / `>>` | เขียน/ต่อท้ายลงไฟล์ |
-| `sort` | เรียงลำดับ |
-| `uniq` | กรองบรรทัดซ้ำ |
-| `awk` / `sed` | ประมวลผลข้อความ |
-
-**ตัวอย่าง:**
-```bash
-ls -l | grep ".log"             # หาไฟล์ .log จากรายการ
-command > output.txt            # เก็บเอาต์พุตลงไฟล์ (เขียนทับ)
-command >> output.txt           # ต่อท้ายไฟล์
-command 2> error.log           # เก็บเฉพาะ error (stderr)
-command > all.log 2>&1         # เก็บทั้ง stdout และ stderr
-sort names.txt                 # เรียงตัวอักษร
-sort -n numbers.txt            # เรียงตัวเลข
-sort -u names.txt              # เรียงและตัดซ้ำ
-sort file | uniq -c            # นับจำนวนแต่ละบรรทัดซ้ำ
-awk '{print $1}' access.log    # พิมพ์คอลัมน์ 1
-awk -F: '{print $1}' /etc/passwd   # พิมพ์ username (คั่นด้วย :)
-sed 's/old/new/g' file.txt     # แทนที่ old เป็น new ทั้งไฟล์
-sed -i 's/old/new/g' file.txt  # แก้ไขในไฟล์โดยตรง (in-place)
-```
-
-### 5.5 การเรียกใช้งานซ้ำและเวลา
-
-| คำสั่ง | คำอธิบาย |
-|---|---|
-| `xargs` | รับอินพุตเป็น argument ของคำสั่ง |
-| `time` | จับเวลาคำสั่ง |
-| `watch` | รันคำสั่งซ้ำทุก N วินาที |
-| `history` | ประวัติคำสั่ง |
-
-**ตัวอย่าง:**
-```bash
-find . -name "*.log" | xargs rm         # ลบไฟล์ .log ทั้งหมดที่หาเจอ
-find . -name "*.tmp" | xargs grep foo   # ค้น foo ในไฟล์ที่หาเจอ
-xargs -I {} cp {} /backup/ < files.txt # คัดลอกไฟล์ตามรายชื่อ
-time python script.py                   # จับเวลาทำงาน
-watch -n 2 nvidia-smi                   # รันทุก 2 วินาที
-watch -d ls -l                          # รันทุก 2 วินาที พร้อมไฮไลต์สิ่งที่เปลี่ยน
-history                                 # ดูประวัติคำสั่ง
-history | grep ssh                      # หาคำสั่ง ssh ที่เคยใช้
-!42                                     # รันคำสั่งหมายเลข 42 ใน history อีกครั้ง
-!!                                      # รันคำสั่งก่อนหน้าอีกครั้ง (มักใช้ sudo !!)
-```
-
-### 5.6 ตัวอย่างจริง: ติดตั้ง nginx + certbot (Let's Encrypt)
-
-การติดตั้งเว็บเซิร์ฟเวอร์ nginx และ certbot สำหรับใบรับรอง SSL/TLS ฟรีจาก Let's Encrypt ครบทั้งขั้นตอน
-
-**ขั้นที่ 1 — อัปเดตรายการแพ็กเกจก่อนเสมอ:**
-```bash
-sudo apt update                 # ดึงรายการแพ็กเกจล่าสุดจาก repository
-sudo apt upgrade -y            # อัปเกรดแพ็กเกจที่ติดตั้งไว้ทั้งหมด (-y ตอบ yes อัตโนมัติ)
-```
-
-**ขั้นที่ 2 — ติดตั้ง nginx:**
-```bash
-sudo apt install -y nginx       # ติดตั้ง nginx
-nginx -v                        # ตรวจเวอร์ชัน
-sudo systemctl status nginx     # ตรวจสถานะ (ควรเป็น active (running))
-sudo systemctl enable nginx     # ให้เริ่มอัตโนมัติตอนบูต
-sudo systemctl restart nginx    # รีสตาร์ทหลังแก้คอนฟิก
-```
-
-ทดสอบ: เปิดเบราว์เซอร์ไปที่ `http://<IP เครื่อง>` ควรเห็นหน้า "Welcome to nginx"
-หรือตรวจด้วยคำสั่ง:
-```bash
-curl -I http://localhost        # ควรได้ HTTP/1.1 200 OK
-```
-
-**ขั้นที่ 3 — ติดตั้ง certbot และปลั๊กอิน nginx:**
-```bash
-sudo apt install -y certbot python3-certbot-nginx   # certbot + ปลั๊กอินสำหรับ nginx
-certbot --version              # ตรวจเวอร์ชัน
-```
-
-> **หมายเหตุ:** ก่อนขอใบรับรอง โดเมนของคุณต้องชี้ A record มาที่ IP เครื่องนี้แล้ว และพอร์ต 80 ต้องเปิดในไฟร์วอลล์
-
-**ขั้นที่ 4 — ขอใบรับรอง SSL (อัตโนมัติ):**
-```bash
-sudo certbot --nginx -d example.com -d www.example.com
-# --nginx    ให้ certbot แก้คอนฟิก nginx ให้อัตโนมัติ (เพิ่ม HTTPS, redirect)
-# -d         ระบุโดเมนที่จะขอใบรับรอง (ระบุได้หลายโดเมน)
-```
-certbot จะถาม:
-1. อีเมลสำหรับรับแจ้งการหมดอายุ
-2. ยอมรับเงื่อนไขการใช้งาน (Y)
-3. เลือกให้ redirect HTTP → HTTPS อัตโนมัติ (แนะนำเลือก 2)
-
-เมื่อสำเร็จจะได้:
-- ใบรับรองที่ `/etc/letsencrypt/live/example.com/`
-- nginx ถูกคอนฟิก HTTPS ให้อัตโนมัติ
-
-**ขั้นที่ 5 — ตั้งให้ต่ออายุอัตโนมัติ:**
-```bash
-sudo certbot renew --dry-run    # ทดสอบกระบวนการต่ออายุ (ไม่ติดต่อจริง)
-sudo certbot renew              # ต่ออายุจริง (ปกติจะมี cron/timer ทำให้แล้ว)
-sudo systemctl list-timers | grep certbot   # ตรวจ timer ต่ออายุอัตโนมัติ
-```
-> ใบรับรอง Let's Encrypt มีอายุ 90 วัน ระบบจะพยายามต่ออายุเมื่อใกล้หมด (ภายใน 30 วันสุดท้าย) ผ่าน `certbot.timer` โดยอัตโนมัติ
-
-**ขั้นที่ 6 — ยกเลิก/ลบใบรับรอง (กรณีไม่ใช้แล้ว):**
-```bash
-sudo certbot delete             # ลบใบรับรอง (จะให้เลือกโดเมน)
-sudo apt remove certbot python3-certbot-nginx   # ลบแพ็กเกจ
-sudo apt purge certbot          # ลบพร้อมคอนฟิก
-```
-
-**คำสั่ง apt ที่เกี่ยวข้อง (สรุป):**
-```bash
-apt search nginx                # ค้นหาแพ็กเกจที่มีชื่อ/คำว่า nginx
-apt show nginx                  # ดูรายละเอียดแพ็กเกจ (เวอร์ชัน, ขนาด, 依赖)
-apt list --installed            # ดูแพ็กเกจที่ติดตั้งแล้วทั้งหมด
-apt list --upgradable           # ดูแพ็กเกจที่มีเวอร์ชันใหม่กว่า
-sudo apt autoremove -y          # ลบแพ็กเกจที่ติดตั้งตามมาแต่ไม่ได้ใช้แล้ว
+# 5. ตรวจสอบพอร์ตที่กำลังเปิดรอรับการเชื่อมต่ออยู่บนระบบ
+ss -tulpn
 ```
 
 ---
 
-## ไอคอนสรุปสำหรับผู้เริ่มต้น
+## 5. การติดตั้งแพ็กเกจและการตั้งค่าสภาพแวดล้อม (Package Manager & Environment)
 
-- **ค้นหาว่าคำสั่งทำอะไร:** `man <คำสั่ง>` (กด q ออก) เช่น `man ls`
-- **ดูคำสั่งย่อแบบสั้น:** `<คำสั่ง> --help` เช่น `ls --help`
-- **`sudo`** = รันในฐานะ root (ระวังทุกครั้ง โดยเฉพาะคำสั่งลบ)
-- **`Ctrl+C`** = ยกเลิก / **`Ctrl+Z`** = พัก / **`Tab`** = กรอกชื่ออัตโนมัติ / **`↑`** = คำสั่งก่อนหน้า
+### 🎯 สิ่งที่ต้องการเรียนรู้
+- การติดตั้งซอฟต์แวร์และเครื่องมือสำหรับนักพัฒนาบน Ubuntu (`apt`)
+- การตั้งค่าตัวแปรสภาพแวดล้อม (Environment Variables) เช่น API Keys
+
+```bash
+# 1. อัปเดตรายการแพ็กเกจระบบให้เป็นเวอร์ชันล่าสุด
+sudo apt update
+
+# 2. ติดตั้งเครื่องมือพื้นฐาน เช่น git, curl, python3, pip, unzip
+sudo apt install -y git curl python3 python3-pip unzip
+
+# 3. กำหนดค่าตัวแปรสภาพแวดล้อมสำหรับรัน Vibe Coding (ตัวอย่างการตั้งค่า API Key)
+export ANTHROPIC_API_KEY="your-api-key-here"
+
+# 4. ตรวจสอบว่าตัวแปรสภาพแวดล้อมถูกตั้งค่าเรียบร้อยแล้ว
+echo $ANTHROPIC_API_KEY
+
+# 5. แสดงเส้นทางโฟลเดอร์ของคำสั่ง python3 บนระบบ
+which python3
+```
+
+---
+
+## 6. ตัวอย่างการปฏิบัติจริง: ติดตั้ง Nginx และ Certbot สำหรับ Web Services
+
+### 🎯 สิ่งที่ต้องการเรียนรู้
+- การติดตั้งเว็บเซิร์ฟเวอร์ และตั้งค่า SSL (HTTPS) สำหรับเปิดบริการ Dashboard งานวิจัย
+
+```bash
+# 1. ติดตั้ง Nginx เว็บเซิร์ฟเวอร์บน Ubuntu
+sudo apt install -y nginx
+
+# 2. เปิดใช้งานบริการ Nginx และตั้งให้ทำงานอัตโนมัติตอนเปิดเครื่อง
+sudo systemctl enable --now nginx
+
+# 3. ตรวจสอบสถานะการทำงานของ Nginx
+sudo systemctl status nginx --no-pager
+
+# 4. ติดตั้ง Certbot และปลั๊กอิน Nginx สำหรับขอ SSL Certificate ฟรี
+sudo apt install -y certbot python3-certbot-nginx
+
+# 5. ทดสอบการจำลองต่ออายุ SSL Certificate (Dry Run)
+sudo certbot renew --dry-run
+```
+
+---
+
+## 💡 สรุปเทคนิคสำหรับคนย้ายจาก Windows มา Linux
+
+- **`Ctrl + C`**: ยกเลิกคำสั่งที่กำลังรันอยู่
+- **`Tab`**: กดเพื่อเติมชื่อไฟล์/โฟลเดอร์อัตโนมัติ (ช่วยให้ไม่ต้องพิมพ์เองทั้งหมด)
+- **`ลูกศรขึ้น (↑)`**: ดึงคำสั่งที่เคยพิมพ์ไว้ก่อนหน้านี้กลับมาใช้
+- **`sudo`**: เปรียบเหมือนการ "Run as Administrator" ใน Windows
+- **`tmux + เมาส์`**: สโครลล้อเมาส์เพื่อย้อนอ่านคำตอบ AI ยาวๆ และทำงานต่อได้แม้ปิดคอมพิวเตอร์

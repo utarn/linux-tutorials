@@ -8,13 +8,14 @@ Pick your shell and run the **install** block once. That gives you a `ccc` / `cc
 
 ## Windows prerequisites (run once)
 
-Before installing Claude Code on Windows, install Git for Windows, PowerShell 7, Windows Terminal, and Node.js (needed by Context7 and the Bright Data CLI) with winget, then make PowerShell 7 the default profile for Windows Terminal:
+Before installing Claude Code on Windows, install Git for Windows, PowerShell 7, Windows Terminal, Node.js (needed by Context7 and the Bright Data CLI), and the GitHub CLI with winget, then make PowerShell 7 the default profile for Windows Terminal:
 
 ```powershell
 winget install --id Git.Git -e
 winget install --id Microsoft.PowerShell -e
 winget install --id Microsoft.WindowsTerminal -e
 winget install --id OpenJS.NodeJS.LTS -e
+winget install -e --id GitHub.cli
 
 # Set PowerShell 7 as the default profile in Windows Terminal
 $settingsPath = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"

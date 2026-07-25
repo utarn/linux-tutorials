@@ -82,10 +82,13 @@ quicksetup() {
   # 3. Bright Data — ติดตั้ง CLI แบบ global (ต้องใช้ Node.js ดูด้านล่าง)
   npm install -g @brightdata/cli
 
-  # 4. Bright Data — skill surface ภายใน Claude Code
-  claude plugin install brightdata-plugin@claude-plugins-official --scope local
+  # 4. Bright Data — ลงทะเบียน skills repo เป็น plugin marketplace
+  claude plugin marketplace add brightdata/skills
 
-  # 5. Bright Data — login ครั้งเดียวเพื่อยืนยันตัวตนของ CLI
+  # 5. Bright Data — ติดตั้ง skills plugin จาก marketplace นั้น
+  claude plugin install brightdata-plugin@brightdata-plugins --scope local
+
+  # 6. Bright Data — login ครั้งเดียวเพื่อยืนยันตัวตนของ CLI
   bdata login
 }
 ```
@@ -127,10 +130,13 @@ function quicksetup {
   # 3. Bright Data — ติดตั้ง CLI แบบ global (ต้องใช้ Node.js ดูด้านล่าง)
   npm install -g @brightdata/cli
 
-  # 4. Bright Data — skill surface ภายใน Claude Code
-  claude plugin install brightdata-plugin@claude-plugins-official --scope local
+  # 4. Bright Data — ลงทะเบียน skills repo เป็น plugin marketplace
+  claude plugin marketplace add brightdata/skills
 
-  # 5. Bright Data — login ครั้งเดียวเพื่อยืนยันตัวตนของ CLI
+  # 5. Bright Data — ติดตั้ง skills plugin จาก marketplace นั้น
+  claude plugin install brightdata-plugin@brightdata-plugins --scope local
+
+  # 6. Bright Data — login ครั้งเดียวเพื่อยืนยันตัวตนของ CLI
   bdata login
 }
 ```
@@ -143,13 +149,13 @@ quicksetup
 
 ## การตั้งค่า Bright Data
 
-Bright Data CLI (`brightdata` / `bdata`) ถูกติดตั้งแบบ global ในขั้นตอนที่ 3 ของ `quicksetup` และยืนยันตัวตนในขั้นตอนที่ 5 ผ่าน `bdata login` ซึ่งจะเปิดเบราว์เซอร์สำหรับ OAuth และสร้าง proxy zones ที่จำเป็นโดยอัตโนมัติ คุณ **ไม่ต้อง** ใช้ MCP server หรือ export API token ด้วยมือ — CLI เก็บข้อมูลรับรองไว้ในเครื่องหลังจาก login
+Bright Data CLI (`brightdata` / `bdata`) ถูกติดตั้งแบบ global ในขั้นตอนที่ 3 ของ `quicksetup` และยืนยันตัวตนในขั้นตอนที่ 6 ผ่าน `bdata login` ซึ่งจะเปิดเบราว์เซอร์สำหรับ OAuth และสร้าง proxy zones ที่จำเป็นโดยอัตโนมัติ คุณ **ไม่ต้อง** ใช้ MCP server หรือ export API token ด้วยมือ — CLI เก็บข้อมูลรับรองไว้ในเครื่องหลังจาก login
 
 - **Headless / SSH** (ไม่มีเบราว์เซอร์): รัน `bdata login --device` แทน แล้วทำตามขั้นตอน device-code flow
 - **Non-interactive** (เช่นในสคริปต์): รัน `bdata login --api-key <key>` ด้วย API key จากแดชบอร์ด Bright Data ของคุณ
 - ตรวจสอบว่าใช้งานได้ด้วย `bdata config` หรือ `bdata budget`
 
-`brightdata-plugin` (ขั้นตอนที่ 4) ติดตั้ง skill `brightdata-cli` เข้าไปใน Claude Code เพื่อให้ agent รู้วิธีขับ `bdata` CLI สำหรับ scraping, ค้น SERP และ structured-data pipelines กว่า 40 แบบ มี global rule ที่ตรงกัน (`~/.claude/rules/brightdata-search.md`) ที่บอก Claude ให้เลือกใช้ `bdata` แทนเครื่องมือ `WebSearch`/`WebFetch` ที่มากับระบบ
+`brightdata-plugin` (ขั้นตอนที่ 4–5 ดึดจาก GitHub repo [brightdata/skills](https://github.com/brightdata/skills) โดยตรง) ติดตั้ง Bright Data skills 21 ตัวเข้าไปใน Claude Code — รวมถึง `brightdata-cli`, `search`, `scrape`, `data-feeds`, `competitive-intel`, `discover-api`, `live-research` และอื่น ๆ — เพื่อให้ agent รู้วิธีขับ `bdata` CLI สำหรับ scraping, ค้น SERP และ structured-data pipelines กว่า 40 แบบ มี global rule ที่ตรงกัน (`~/.claude/rules/brightdata-search.md`) ที่บอก Claude ให้เลือกใช้ `bdata` แทนเครื่องมือ `WebSearch`/`WebFetch` ที่มากับระบบ
 
 ## แต่ละขั้นตอนทำอะไร
 
@@ -159,7 +165,8 @@ Bright Data CLI (`brightdata` / `bdata`) ถูกติดตั้งแบบ
 | 2 | `claude plugin install utarn-skills@utarn` | ติดตั้งแพ็กเกจ engineer-skills ทั้งหมดเป็นปลั๊กอินที่จัดการและอัปเดตอัตโนมัติ |
 | 3 | `npx ctx7@latest setup` | ติดตั้ง Context7 ลงใน coding agent ของคุณเพื่อให้ดึงเอกสาร library แบบสดได้ |
 | 4 | `npm install -g @brightdata/cli` | ติดตั้ง Bright Data CLI (`brightdata` / `bdata`) แบบ global ต้องใช้ Node.js >= 20 |
-| 5 | `claude plugin install brightdata-plugin@claude-plugins-official --scope local` | เพิ่ม Bright Data skill surface ให้โปรเจกต์นี้ |
-| 6 | `bdata login` | ยืนยันตัวตน CLI ครั้งเดียว — เปิดเบราว์เซอร์สำหรับ OAuth และสร้าง proxy zones อัตโนมัติ |
+| 5 | `claude plugin marketplace add brightdata/skills` | ลงทะเบียน GitHub repo [brightdata/skills](https://github.com/brightdata/skills) เป็น Claude Code plugin marketplace |
+| 6 | `claude plugin install brightdata-plugin@brightdata-plugins --scope local` | ติดตั้งปลั๊กอิน Bright Data 21 skills จาก marketplace นั้นเข้าโปรเจกต์นี้ |
+| 7 | `bdata login` | ยืนยันตัวตน CLI ครั้งเดียว — เปิดเบราว์เซอร์สำหรับ OAuth และสร้าง proxy zones อัตโนมัติ |
 
 หลังจาก `quicksetup` เสร็จ ให้รัน `/setup-utarn-skills` ครั้งเดียวต่อ repo เพื่อตั้งค่า issue tracker, triage labels และตำแหน่ง docs — ดู [Quickstart](./README.md#quickstart-30-second-setup) ใน README

@@ -1,0 +1,10 @@
+services:
+  redis:
+    image: redis:8.2.7
+    container_name: redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data:/data

@@ -1,0 +1,12 @@
+services:
+  meilisearch:
+    image: getmeili/meilisearch:v1.37
+    container_name: meilisearch
+    restart: unless-stopped
+    environment:
+      MEILI_ENV: development
+      MEILI_MASTER_KEY: supersecretkey
+    ports:
+      - "7700:7700"
+    volumes:
+      - ./data:/meili_data

@@ -37,10 +37,60 @@ ssh user@server-ip
 ### 🎯 สิ่งที่ต้องการเรียนรู้
 - ขั้นตอนการเตรียมเครื่อง Windows ให้พร้อมสำหรับ Remote - SSH
 
-1. ดาวน์โหลดและติดตั้ง **VS Code** บน Windows จากเว็บ [https://code.visualstudio.com/](https://code.visualstudio.com/)
-2. เปิดโปรแกรม VS Code
-3. กดปุ่ม `Ctrl + Shift + X` เพื่อเปิดเมนู **Extensions**
-4. ค้นหาคำว่า **Remote - SSH** (โดย Microsoft) แล้วคลิก **Install**
+#### ติดตั้ง VS Code บน Windows
+
+เลือกวิธีใดวิธีหนึ่งตามที่ถนัด:
+
+**วิธีที่ 1: ติดตั้งผ่าน winget (แนะนำ รวดเร็ว ทำใน Terminal ได้เลย)**
+
+```powershell
+# เปิด PowerShell หรือ Command Prompt แล้วรันคำสั่งต่อไปนี้
+winget install --id Microsoft.VisualStudioCode -e --source winget
+```
+
+- คำสั่งนี้จะดาวน์โหลดและติดตั้ง VS Code เวอร์ชันเสถียรล่าสุดโดยอัตโนมัติ
+- หลังติดตั้งเสร็จ ให้ปิด-เปิด Terminal ใหม่เพื่อให้คำสั่ง `code` พร้อมใช้งานใน PATH
+
+**วิธีที่ 2: ติดตั้งผ่าน Microsoft Store (เหมาะกับผู้ที่ชอบ UI)**
+
+1. เปิดแอป **Microsoft Store** บน Windows
+2. ค้นหาคำว่า **Visual Studio Code**
+3. คลิก **Install** / **รับ** เพื่อดาวน์โหลดและติดตั้ง
+4. ข้อดีคือจะได้รับการอัปเดตอัตโนมัติผ่าน Microsoft Store
+
+**วิธีที่ 3: ดาวน์โหลดตัวติดตั้งโดยตรง**
+
+ดาวน์โหลดและติดตั้งจากเว็บ [https://code.visualstudio.com/](https://code.visualstudio.com/)
+
+#### ติดตั้ง VS Code บน macOS
+
+เลือกวิธีใดวิธีหนึ่งตามที่ถนัด:
+
+**วิธีที่ 1: ติดตั้งผ่าน Homebrew (แนะนำ)**
+
+```bash
+# รันใน Terminal (ต้องติดตั้ง Homebrew ก่อน ดูได้ที่ https://brew.sh)
+brew install --cask visual-studio-code
+```
+
+- หลังติดตั้งเสร็จ ให้เปิดแอป VS Code จาก Launchpad หรือโฟลเดอร์ Applications
+- เพื่อให้คำสั่ง `code` ใช้งานได้ใน Terminal: เปิด VS Code → กด `Cmd + Shift + P` → พิมพ์ `Shell Command: Install 'code' command in PATH` → Enter
+
+**วิธีที่ 2: ดาวน์โหลดตัวติดตั้งโดยตรง**
+
+ดาวน์โหลดไฟล์ `.zip` จากเว็บ [https://code.visualstudio.com/](https://code.visualstudio.com/) แล้วลาก VS Code ไปไว้ในโฟลเดอร์ Applications
+
+#### ติดตั้ง Extension Remote - SSH
+
+1. เปิดโปรแกรม VS Code
+2. กดปุ่ม `Ctrl + Shift + X` (Windows) หรือ `Cmd + Shift + X` (macOS) เพื่อเปิดเมนู **Extensions**
+3. ค้นหาคำว่า **Remote - SSH** (โดย Microsoft) แล้วคลิก **Install**
+
+หรือติดตั้งผ่าน CLI ได้ทันที:
+
+```bash
+code --install-extension ms-vscode-remote.remote-ssh
+```
 
 ---
 

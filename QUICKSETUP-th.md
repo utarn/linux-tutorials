@@ -1,6 +1,6 @@
 # การตั้งค่าด่วน (Quick Setup)
 
-เริ่มใช้งาน Claude Code พร้อมเครื่องมือทั้งหมดที่คุณต้องการในขั้นตอนเดียว: ปลั๊กอิน engineer-skills, Context7 สำหรับดึงเอกสารสด, และ Bright Data สำหรับ scraping เว็บ (CLI + skill)
+เริ่มใช้งาน Claude Code พร้อมเครื่องมือทั้งหมดที่คุณต้องการในขั้นตอนเดียว: ปลั๊กอิน engineer-skills, Context7 สำหรับดึงเอกสารสด, และ Bright Data CLI + skill สำหรับ scraping เว็บ
 
 เลือก shell ของคุณแล้วรันบล็อก **install** ครั้งเดียว สิ่งนี้จะให้คู่คำสั่ง `ccc` / `cccc` สำหรับเปิด Claude Code พร้อมฟังก์ชัน `quicksetup` ที่เชื่อมต่อ skills ให้ จากนั้นเพียงพิมพ์ `quicksetup` เพื่อรันได้เลย
 
@@ -8,12 +8,13 @@
 
 ## เงื่อนไขเบื้องต้นสำหรับ Windows (รันครั้งเดียว)
 
-ก่อนติดตั้ง Claude Code บน Windows ให้ติดตั้ง Git for Windows, PowerShell 7 และ Windows Terminal ด้วย winget จากนั้นตั้งค่าให้ PowerShell 7 เป็นโปรไฟล์เริ่มต้นของ Windows Terminal:
+ก่อนติดตั้ง Claude Code บน Windows ให้ติดตั้ง Git for Windows, PowerShell 7, Windows Terminal และ Node.js (ที่ Context7 และ Bright Data CLI ต้องใช้) ด้วย winget จากนั้นตั้งค่าให้ PowerShell 7 เป็นโปรไฟล์เริ่มต้นของ Windows Terminal:
 
 ```powershell
 winget install --id Git.Git -e
 winget install --id Microsoft.PowerShell -e
 winget install --id Microsoft.WindowsTerminal -e
+winget install --id OpenJS.NodeJS.LTS -e
 
 # ตั้งค่า PowerShell 7 ให้เป็นโปรไฟล์เริ่มต้นใน Windows Terminal
 $settingsPath = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
@@ -69,7 +70,7 @@ claude                # เปิดเซสชันโต้ตอบแล�
 ccc()  { claude --dangerously-skip-permissions "$@"; }
 cccc() { claude --dangerously-skip-permissions --continue "$@"; }
 
-# ตั้งค่าแบบรอบเดียว: ปลั๊กอิน engineer-skills + Context7 + Bright Data (CLI + skill)
+# ตั้งค่าแบบรอบเดียว: ปลั๊กอิน engineer-skills + Context7 + Bright Data CLI + skill
 quicksetup() {
   # 1. ปลั๊กอิน engineer-skills
   claude plugin marketplace add utarn/engineer-skills
@@ -78,13 +79,18 @@ quicksetup() {
   # 2. Context7 — เอกสาร library แบบสด
   npx ctx7@latest setup
 
-  # 3. Bright Data — CLI / MCP server (ต้องใช้ API token ดูด้านล่าง)
-  claude mcp add brightdata -- npx -y @brightdata/mcp
+  # 3. Bright Data — ติดตั้ง CLI แบบ global (ต้องใช้ Node.js ดูด้านล่าง)
+  npm install -g @brightdata/cli
 
   # 4. Bright Data — skill surface ภายใน Claude Code
   claude plugin install brightdata-plugin@claude-plugins-official --scope local
+
+  # 5. Bright Data — login ครั้งเดียวเพื่อยืนยันตัวตนของ CLI
+  bdata login
 }
 ```
+
+> **ต้องใช้ Node.js:** ขั้นตอนที่ 3 ต้องใช้ Node.js (>= 20) บน macOS ติดตั้งด้วย `brew install node@20` (หรือใช้ตัวติดตั้งทางการ) บน Linux ใช้ package manager หรือ [NodeSource](https://github.com/nodesource/distributions) บน Windows ได้ติดตั้งผ่าน winget ในเงื่อนไขเบื้องต้นด้านบนแล้ว
 
 รันคำสั่ง:
 
@@ -109,7 +115,7 @@ if (!(Test-Path -Path $PROFILE)) { New-Item -ItemType File -Path $PROFILE -Force
 function ccc  { claude --dangerously-skip-permissions @args }
 function cccc { claude --dangerously-skip-permissions --continue @args }
 
-# ตั้งค่าแบบรอบเดียว: ปลั๊กอิน engineer-skills + Context7 + Bright Data (CLI + skill)
+# ตั้งค่าแบบรอบเดียว: ปลั๊กอิน engineer-skills + Context7 + Bright Data CLI + skill
 function quicksetup {
   # 1. ปลั๊กอิน engineer-skills
   claude plugin marketplace add utarn/engineer-skills
@@ -118,11 +124,14 @@ function quicksetup {
   # 2. Context7 — เอกสาร library แบบสด
   npx ctx7@latest setup
 
-  # 3. Bright Data — CLI / MCP server (ต้องใช้ API token ดูด้านล่าง)
-  claude mcp add brightdata -- npx -y @brightdata/mcp
+  # 3. Bright Data — ติดตั้ง CLI แบบ global (ต้องใช้ Node.js ดูด้านล่าง)
+  npm install -g @brightdata/cli
 
   # 4. Bright Data — skill surface ภายใน Claude Code
   claude plugin install brightdata-plugin@claude-plugins-official --scope local
+
+  # 5. Bright Data — login ครั้งเดียวเพื่อยืนยันตัวตนของ CLI
+  bdata login
 }
 ```
 
@@ -132,25 +141,15 @@ function quicksetup {
 quicksetup
 ```
 
-## Bright Data API key (แผนฟรี / free tier)
+## การตั้งค่า Bright Data
 
-เซิร์ฟเวอร์ Bright Data MCP ต้องการ API token เพื่อเชื่อมต่อกับเครือข่าย scraping ของ Bright Data
+Bright Data CLI (`brightdata` / `bdata`) ถูกติดตั้งแบบ global ในขั้นตอนที่ 3 ของ `quicksetup` และยืนยันตัวตนในขั้นตอนที่ 5 ผ่าน `bdata login` ซึ่งจะเปิดเบราว์เซอร์สำหรับ OAuth และสร้าง proxy zones ที่จำเป็นโดยอัตโนมัติ คุณ **ไม่ต้อง** ใช้ MCP server หรือ export API token ด้วยมือ — CLI เก็บข้อมูลรับรองไว้ในเครื่องหลังจาก login
 
-1. ไปที่เว็บไซต์ Bright Data แล้วสมัครสมาชิก — มี **free tier** ที่ใช้งานได้โดยไม่ต้องมีแผนแบบชำระเงิน
-2. สร้างโซน (Web Unlocker คือตัวทั่วไป) แล้วคัดลอก API token ของมัน
-3. Export token ก่อนเปิด Claude เพื่อให้ MCP server อ่านได้:
+- **Headless / SSH** (ไม่มีเบราว์เซอร์): รัน `bdata login --device` แทน แล้วทำตามขั้นตอน device-code flow
+- **Non-interactive** (เช่นในสคริปต์): รัน `bdata login --api-key <key>` ด้วย API key จากแดชบอร์ด Bright Data ของคุณ
+- ตรวจสอบว่าใช้งานได้ด้วย `bdata config` หรือ `bdata budget`
 
-   **Bash** — เพิ่มลงใน `~/.bashrc` / `~/.zshrc`:
-   ```bash
-   export BRIGHT_DATA_API_TOKEN="วาง-token-ของคุณ-ที่นี่"
-   ```
-
-   **PowerShell** — เพิ่มลงในโปรไฟล์ของคุณ:
-   ```powershell
-   $env:BRIGHT_DATA_API_TOKEN = "วาง-token-ของคุณ-ที่นี่"
-   ```
-
-เริ่ม shell ใหม่ (หรือโหลดโปรไฟล์ใหม่) หลังจาก export token แล้วรัน `ccc` / `cccc`
+`brightdata-plugin` (ขั้นตอนที่ 4) ติดตั้ง skill `brightdata-cli` เข้าไปใน Claude Code เพื่อให้ agent รู้วิธีขับ `bdata` CLI สำหรับ scraping, ค้น SERP และ structured-data pipelines กว่า 40 แบบ มี global rule ที่ตรงกัน (`~/.claude/rules/brightdata-search.md`) ที่บอก Claude ให้เลือกใช้ `bdata` แทนเครื่องมือ `WebSearch`/`WebFetch` ที่มากับระบบ
 
 ## แต่ละขั้นตอนทำอะไร
 
@@ -159,7 +158,8 @@ quicksetup
 | 1 | `claude plugin marketplace add utarn/engineer-skills` | ลงทะเบียน repo นี้เป็น Claude Code plugin marketplace |
 | 2 | `claude plugin install utarn-skills@utarn` | ติดตั้งแพ็กเกจ engineer-skills ทั้งหมดเป็นปลั๊กอินที่จัดการและอัปเดตอัตโนมัติ |
 | 3 | `npx ctx7@latest setup` | ติดตั้ง Context7 ลงใน coding agent ของคุณเพื่อให้ดึงเอกสาร library แบบสดได้ |
-| 4 | `claude mcp add brightdata -- npx -y @brightdata/mcp` | ลงทะเบียน Bright Data MCP server (CLI) ให้ Claude เรียกเครื่องมือ scraping ได้ ต้องใช้ API token ด้านบน |
+| 4 | `npm install -g @brightdata/cli` | ติดตั้ง Bright Data CLI (`brightdata` / `bdata`) แบบ global ต้องใช้ Node.js >= 20 |
 | 5 | `claude plugin install brightdata-plugin@claude-plugins-official --scope local` | เพิ่ม Bright Data skill surface ให้โปรเจกต์นี้ |
+| 6 | `bdata login` | ยืนยันตัวตน CLI ครั้งเดียว — เปิดเบราว์เซอร์สำหรับ OAuth และสร้าง proxy zones อัตโนมัติ |
 
 หลังจาก `quicksetup` เสร็จ ให้รัน `/setup-utarn-skills` ครั้งเดียวต่อ repo เพื่อตั้งค่า issue tracker, triage labels และตำแหน่ง docs — ดู [Quickstart](./README.md#quickstart-30-second-setup) ใน README

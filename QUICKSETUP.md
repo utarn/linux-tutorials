@@ -1,6 +1,6 @@
 # Quick Setup
 
-Get Claude Code working with all the tools you need in one shot: the engineer-skills plugin, Context7 for live docs, and the Bright Data CLI + skill for web scraping.
+Get Claude Code working with all the tools you need in one shot: the engineer-skills plugin, Context7 for live docs, the Bright Data CLI + skill for web scraping, and `npx fallow` for codebase intelligence.
 
 Pick your shell and run the **install** block once. That gives you a `ccc` / `cccc` pair to launch Claude Code, plus a `quicksetup` function that wires up the skills. Then just type `quicksetup` to run it.
 
@@ -158,6 +158,27 @@ The Bright Data CLI (`brightdata` / `bdata`) is installed globally in step 3 of 
 - Verify it works with `bdata config` or `bdata budget`.
 
 The `brightdata-plugin` (steps 4–5, sourced directly from the [brightdata/skills](https://github.com/brightdata/skills) GitHub repo) installs 21 Bright Data skills into Claude Code — including `brightdata-cli`, `search`, `scrape`, `data-feeds`, `competitive-intel`, `discover-api`, `live-research`, and more — so the agent knows how to drive the `bdata` CLI for scraping, SERP search, and 40+ structured-data pipelines. A matching global rule (`~/.claude/rules/brightdata-search.md`) tells Claude to prefer `bdata` over the built-in `WebSearch`/`WebFetch` tools.
+
+## Fallow — codebase intelligence (optional, per repo)
+
+[Fallow](https://docs.fallow.tools) is a codebase analyzer for TypeScript/JavaScript that surfaces unused code, circular dependencies, code duplication, complexity hotspots, and architecture boundary violations. It runs via `npx` — no global install needed, and no config required for the first run. Needs Node.js (already installed in the prerequisites above).
+
+```bash
+# One-off scan — no config needed
+npx fallow                       # overall summary
+npx fallow health                # complexity, maintainability, hotspots, coverage gaps
+npx fallow dead-code             # unused files, exports, and dependencies
+npx fallow dupes                 # copy-paste and structural duplication
+npx fallow audit                 # review changed files (great in a PR)
+
+# Generate a project config (optional — adds a fallow config file, optionally a Git hook)
+npx fallow init
+
+# Preview safe auto-fixes before applying
+npx fallow fix --dry-run
+```
+
+See the [Fallow docs](https://docs.fallow.tools) for CI integration, rule packs, and runtime coverage.
 
 ## What each step does
 

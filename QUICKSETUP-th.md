@@ -1,6 +1,6 @@
 # การตั้งค่าด่วน (Quick Setup)
 
-เริ่มใช้งาน Claude Code พร้อมเครื่องมือทั้งหมดที่คุณต้องการในขั้นตอนเดียว: ปลั๊กอิน engineer-skills, Context7 สำหรับดึงเอกสารสด, Bright Data CLI + skill สำหรับ scraping เว็บ และ `npx fallow` สำหรับวิเคราะห์ codebase
+เริ่มใช้งาน Claude Code พร้อมเครื่องมือทั้งหมดที่คุณต้องการในขั้นตอนเดียว: ปลั๊กอิน engineer-skills, Context7 สำหรับดึงเอกสารสด, Bright Data CLI + skill สำหรับ scraping เว็บ และ Fallow CLI สำหรับวิเคราะห์ codebase
 
 เลือก shell ของคุณแล้วรันบล็อก **install** ครั้งเดียว สิ่งนี้จะให้คู่คำสั่ง `ccc` / `cccc` สำหรับเปิด Claude Code พร้อมฟังก์ชัน `quicksetup` ที่เชื่อมต่อ skills ให้ จากนั้นเพียงพิมพ์ `quicksetup` เพื่อรันได้เลย
 
@@ -92,10 +92,13 @@ quicksetup() {
 
   # 6. Bright Data — login ครั้งเดียวเพื่อยืนยันตัวตนของ CLI
   bdata login
+
+  # 7. Fallow — ติดตั้ง CLI วิเคราะห์ codebase แบบ global
+  npm install -g fallow
 }
 ```
 
-> **ต้องใช้ Node.js:** ขั้นตอนที่ 3 ต้องใช้ Node.js (>= 20) บน macOS ติดตั้งด้วย `brew install node@20` (หรือใช้ตัวติดตั้งทางการ) บน Linux ใช้ package manager หรือ [NodeSource](https://github.com/nodesource/distributions) บน Windows ได้ติดตั้งผ่าน winget ในเงื่อนไขเบื้องต้นด้านบนแล้ว
+> **ต้องใช้ Node.js:** ขั้นตอนที่ 3 และ 7 ต้องใช้ Node.js (>= 20) บน macOS ติดตั้งด้วย `brew install node@20` (หรือใช้ตัวติดตั้งทางการ) บน Linux ใช้ package manager หรือ [NodeSource](https://github.com/nodesource/distributions) บน Windows ได้ติดตั้งผ่าน winget ในเงื่อนไขเบื้องต้นด้านบนแล้ว
 
 รันคำสั่ง:
 
@@ -140,6 +143,9 @@ function quicksetup {
 
   # 6. Bright Data — login ครั้งเดียวเพื่อยืนยันตัวตนของ CLI
   bdata login
+
+  # 7. Fallow — ติดตั้ง CLI วิเคราะห์ codebase แบบ global
+  npm install -g fallow
 }
 ```
 
@@ -159,23 +165,23 @@ Bright Data CLI (`brightdata` / `bdata`) ถูกติดตั้งแบบ
 
 `brightdata-plugin` (ขั้นตอนที่ 4–5 ดึดจาก GitHub repo [brightdata/skills](https://github.com/brightdata/skills) โดยตรง) ติดตั้ง Bright Data skills 21 ตัวเข้าไปใน Claude Code — รวมถึง `brightdata-cli`, `search`, `scrape`, `data-feeds`, `competitive-intel`, `discover-api`, `live-research` และอื่น ๆ — เพื่อให้ agent รู้วิธีขับ `bdata` CLI สำหรับ scraping, ค้น SERP และ structured-data pipelines กว่า 40 แบบ มี global rule ที่ตรงกัน (`~/.claude/rules/brightdata-search.md`) ที่บอก Claude ให้เลือกใช้ `bdata` แทนเครื่องมือ `WebSearch`/`WebFetch` ที่มากับระบบ
 
-## Fallow — codebase intelligence (ไม่บังคับ ใช้ต่อ repo)
+## Fallow — codebase intelligence
 
-[Fallow](https://docs.fallow.tools) คือตัววิเคราะห์ codebase สำหรับ TypeScript/JavaScript ช่วยหาโค้ดที่ไม่ได้ใช้, การอ้างอิงแบบวงกลม, โค้ดที่ซ้ำกัน, complexity hotspot และการละเมิดขอบเขตสถาปัตยกรรม รันผ่าน `npx` ได้เลย — ไม่ต้องติดตั้งแบบ global และไม่ต้องตั้งค่าในครั้งแรก ต้องใช้ Node.js (ติดตั้งในเงื่อนไขเบื้องต้นด้านบนแล้ว)
+[Fallow](https://docs.fallow.tools) คือตัววิเคราะห์ codebase สำหรับ TypeScript/JavaScript ช่วยหาโค้ดที่ไม่ได้ใช้, การอ้างอิงแบบวงกลม, โค้ดที่ซ้ำกัน, complexity hotspot และการละเมิดขอบเขตสถาปัตยกรรม ติดตั้งแบบ global ในขั้นตอนที่ 7 ของ `quicksetup` (ไบนารี `fallow`) ต้องใช้ Node.js >= 20 และไม่ต้องตั้งค่าในครั้งแรก
 
 ```bash
 # สแกนครั้งเดียว — ไม่ต้องตั้งค่า
-npx fallow                       # สรุปภาพรวม
-npx fallow health                # complexity, maintainability, hotspots, coverage gaps
-npx fallow dead-code             # ไฟล์, exports และ dependencies ที่ไม่ได้ใช้
-npx fallow dupes                 # โค้ดที่ซ้ำกันแบบ copy-paste และโครงสร้าง
-npx fallow audit                 # ตรวจไฟล์ที่เปลี่ยนแปลง (เหมาะใน PR)
+fallow                       # สรุปภาพรวม
+fallow health                # complexity, maintainability, hotspots, coverage gaps
+fallow dead-code             # ไฟล์, exports และ dependencies ที่ไม่ได้ใช้
+fallow dupes                 # โค้ดที่ซ้ำกันแบบ copy-paste และโครงสร้าง
+fallow audit                 # ตรวจไฟล์ที่เปลี่ยนแปลง (เหมาะใน PR)
 
 # สร้าง config ของโปรเจกต์ (ไม่บังคับ — เพิ่มไฟล์ fallow config และ Git hook ได้)
-npx fallow init
+fallow init
 
 # ดูตัวอย่าง auto-fix ที่ปลอดภัยก่อนนำไปใช้
-npx fallow fix --dry-run
+fallow fix --dry-run
 ```
 
 ดู [เอกสาร Fallow](https://docs.fallow.tools) สำหรับการเชื่อม CI, rule packs และ runtime coverage
@@ -191,5 +197,6 @@ npx fallow fix --dry-run
 | 5 | `claude plugin marketplace add brightdata/skills` | ลงทะเบียน GitHub repo [brightdata/skills](https://github.com/brightdata/skills) เป็น Claude Code plugin marketplace |
 | 6 | `claude plugin install brightdata-plugin@brightdata-plugins --scope local` | ติดตั้งปลั๊กอิน Bright Data 21 skills จาก marketplace นั้นเข้าโปรเจกต์นี้ |
 | 7 | `bdata login` | ยืนยันตัวตน CLI ครั้งเดียว — เปิดเบราว์เซอร์สำหรับ OAuth และสร้าง proxy zones อัตโนมัติ |
+| 8 | `npm install -g fallow` | ติดตั้ง CLI วิเคราะห์ codebase ของ Fallow (`fallow`) แบบ global ต้องใช้ Node.js >= 20 |
 
 หลังจาก `quicksetup` เสร็จ ให้รัน `/setup-utarn-skills` ครั้งเดียวต่อ repo เพื่อตั้งค่า issue tracker, triage labels และตำแหน่ง docs — ดู [Quickstart](./README.md#quickstart-30-second-setup) ใน README

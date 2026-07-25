@@ -1,6 +1,6 @@
 # Quick Setup
 
-Get Claude Code working with all the tools you need in one shot: the engineer-skills plugin, Context7 for live docs, the Bright Data CLI + skill for web scraping, and `npx fallow` for codebase intelligence.
+Get Claude Code working with all the tools you need in one shot: the engineer-skills plugin, Context7 for live docs, the Bright Data CLI + skill for web scraping, and the Fallow CLI for codebase intelligence.
 
 Pick your shell and run the **install** block once. That gives you a `ccc` / `cccc` pair to launch Claude Code, plus a `quicksetup` function that wires up the skills. Then just type `quicksetup` to run it.
 
@@ -92,10 +92,13 @@ quicksetup() {
 
   # 6. Bright Data — one-time login so the CLI is authenticated
   bdata login
+
+  # 7. Fallow — install the codebase intelligence CLI globally
+  npm install -g fallow
 }
 ```
 
-> **Node.js required:** Step 3 needs Node.js (>= 20). On macOS install it with `brew install node@20` (or via the official installer); on Linux use your package manager or [NodeSource](https://github.com/nodesource/distributions). On Windows it was already installed via winget in the prerequisites above.
+> **Node.js required:** Steps 3 and 7 need Node.js (>= 20). On macOS install it with `brew install node@20` (or via the official installer); on Linux use your package manager or [NodeSource](https://github.com/nodesource/distributions). On Windows it was already installed via winget in the prerequisites above.
 
 Run it:
 
@@ -140,6 +143,9 @@ function quicksetup {
 
   # 6. Bright Data — one-time login so the CLI is authenticated
   bdata login
+
+  # 7. Fallow — install the codebase intelligence CLI globally
+  npm install -g fallow
 }
 ```
 
@@ -159,23 +165,23 @@ The Bright Data CLI (`brightdata` / `bdata`) is installed globally in step 3 of 
 
 The `brightdata-plugin` (steps 4–5, sourced directly from the [brightdata/skills](https://github.com/brightdata/skills) GitHub repo) installs 21 Bright Data skills into Claude Code — including `brightdata-cli`, `search`, `scrape`, `data-feeds`, `competitive-intel`, `discover-api`, `live-research`, and more — so the agent knows how to drive the `bdata` CLI for scraping, SERP search, and 40+ structured-data pipelines. A matching global rule (`~/.claude/rules/brightdata-search.md`) tells Claude to prefer `bdata` over the built-in `WebSearch`/`WebFetch` tools.
 
-## Fallow — codebase intelligence (optional, per repo)
+## Fallow — codebase intelligence
 
-[Fallow](https://docs.fallow.tools) is a codebase analyzer for TypeScript/JavaScript that surfaces unused code, circular dependencies, code duplication, complexity hotspots, and architecture boundary violations. It runs via `npx` — no global install needed, and no config required for the first run. Needs Node.js (already installed in the prerequisites above).
+[Fallow](https://docs.fallow.tools) is a codebase analyzer for TypeScript/JavaScript that surfaces unused code, circular dependencies, code duplication, complexity hotspots, and architecture boundary violations. It is installed globally in step 7 of `quicksetup` (the `fallow` binary), needs Node.js >= 20, and needs no config for the first run.
 
 ```bash
 # One-off scan — no config needed
-npx fallow                       # overall summary
-npx fallow health                # complexity, maintainability, hotspots, coverage gaps
-npx fallow dead-code             # unused files, exports, and dependencies
-npx fallow dupes                 # copy-paste and structural duplication
-npx fallow audit                 # review changed files (great in a PR)
+fallow                       # overall summary
+fallow health                # complexity, maintainability, hotspots, coverage gaps
+fallow dead-code             # unused files, exports, and dependencies
+fallow dupes                 # copy-paste and structural duplication
+fallow audit                 # review changed files (great in a PR)
 
 # Generate a project config (optional — adds a fallow config file, optionally a Git hook)
-npx fallow init
+fallow init
 
 # Preview safe auto-fixes before applying
-npx fallow fix --dry-run
+fallow fix --dry-run
 ```
 
 See the [Fallow docs](https://docs.fallow.tools) for CI integration, rule packs, and runtime coverage.
@@ -191,5 +197,6 @@ See the [Fallow docs](https://docs.fallow.tools) for CI integration, rule packs,
 | 5 | `claude plugin marketplace add brightdata/skills` | Register the [brightdata/skills](https://github.com/brightdata/skills) GitHub repo as a Claude Code plugin marketplace. |
 | 6 | `claude plugin install brightdata-plugin@brightdata-plugins --scope local` | Install the 21-skill Bright Data plugin from that marketplace into this project. |
 | 7 | `bdata login` | Authenticate the CLI once — opens the browser for OAuth and auto-creates proxy zones. |
+| 8 | `npm install -g fallow` | Install the Fallow codebase intelligence CLI (`fallow`) globally. Needs Node.js >= 20. |
 
 After `quicksetup` finishes, run `/setup-utarn-skills` once per repo to configure issue tracker, triage labels, and docs location — see the [Quickstart](./README.md#quickstart-30-second-setup) in the README.

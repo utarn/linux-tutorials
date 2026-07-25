@@ -8,7 +8,7 @@
 
 ## เงื่อนไขเบื้องต้นสำหรับ Windows (รันครั้งเดียว)
 
-ก่อนติดตั้ง Claude Code บน Windows ให้ติดตั้ง Git for Windows, PowerShell 7, Windows Terminal, Node.js (ที่ Context7 และ Bright Data CLI ต้องใช้) และ GitHub CLI ด้วย winget จากนั้นตั้งค่าให้ PowerShell 7 เป็นโปรไฟล์เริ่มต้นของ Windows Terminal:
+ก่อนติดตั้ง Claude Code บน Windows ให้ติดตั้ง Git for Windows, PowerShell 7, Windows Terminal, Node.js (ที่ Context7 และ Bright Data CLI ต้องใช้), GitHub CLI และ Python 3.14 ด้วย winget จากนั้นตั้งค่าให้ PowerShell 7 เป็นโปรไฟล์เริ่มต้นของ Windows Terminal:
 
 ```powershell
 winget install --id Git.Git -e
@@ -16,6 +16,7 @@ winget install --id Microsoft.PowerShell -e
 winget install --id Microsoft.WindowsTerminal -e
 winget install --id OpenJS.NodeJS.LTS -e
 winget install -e --id GitHub.cli
+winget install --id Python.Python.3.14 -e
 
 # ตั้งค่า PowerShell 7 ให้เป็นโปรไฟล์เริ่มต้นใน Windows Terminal
 $settingsPath = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"

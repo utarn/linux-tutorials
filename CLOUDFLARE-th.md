@@ -112,7 +112,7 @@ cloudflared tunnel --token eyJhIjoi... run
 # คำสั่งติดตั้ง connector จาก dashboard ทำสิ่งนี้อยู่แล้ว; ถ้าทำเอง:
 sudo cloudflared service install eyJhIjoi...long-token-string...==
 sudo systemctl enable --now cloudflared
-systemctl status cloudflared
+sudo systemctl status cloudflared
 ```
 
 รีสตาร์ทหลังเปลี่ยน config: `sudo systemctl restart cloudflared`
@@ -202,6 +202,57 @@ app.mydomain.com.   CNAME   <tunnel-id>.cfargotunnel.com.
 ### ขั้นต่ำสำหรับ "เผยแพร่ HTTP จากเครื่อง Linux นี้" (flow ของ dashboard)
 
 บนเครื่องไม่ต้องมี API token เลย dashboard สร้าง tunnel, CNAME และ route; คุณแค่คัดลอก tunnel token ขึ้นเครื่อง (มันจะติดตั้ง connector) สิทธิ์ด้านบนมีผลก็ต่อเมื่อคุณเขียนสคริปต์สร้าง tunnel หรือ DNS ผ่าน CLI/API เท่านั้น
+
+## 8. Wrangler — Developer Platform CLI
+
+[Wrangler](https://developers.cloudflare.com/workers/wrangler/) คือ CLI หลักของ Cloudflare Developer Platform ใช้สร้าง ทดสอบ และ deploy แอปพลิเคชันแบบ full-stack — Workers, Pages, R2 Storage, D1 Databases, KV stores, Queues และอื่น ๆ
+
+### การติดตั้ง
+
+**Per‑project (แนะนำ)** — กำหนดเวอร์ชันใน `package.json` เหมาะกับ CI/CD และทีมที่มีหลายคน:
+
+```bash
+npm install -D wrangler
+```
+
+**Global** — ใช้ได้ทุกที่ เหมาะถ้ามีโปรเจกต์ Cloudflare เดียวหรืออยากให้พร้อมใช้ตลอด:
+
+```bash
+npm install -g wrangler
+wrangler --version
+```
+
+### เริ่มต้นใช้งาน
+
+```bash
+npx wrangler login                     # browser OAuth — เก็บ token ในเครื่อง
+npx wrangler init my-worker            # สร้างโปรเจกต์ Worker ใหม่
+cd my-worker
+npx wrangler deploy                    # deploy ไปยัง cloudflareworkers.com
+```
+
+### คำสั่งที่พบบ่อย
+
+| คำสั่ง | คำอธิบาย |
+|---|---|
+| `wrangler login` / `wrangler logout` | เข้าสู่ระบบ / ออกจากระบบ CLI |
+| `wrangler init <name>` | สร้างโปรเจกต์ Worker ใหม่ |
+| `wrangler dev` | รัน Worker ในเครื่อง (ใช้ `miniflare`) |
+| `wrangler deploy` | deploy Worker ไปยัง edge |
+| `wrangler tail` | ดู logs แบบเรียลไทม์จาก Worker ที่ deploy แล้ว |
+| `wrangler kv:key put/get/list` | จัดการ KV store |
+| `wrangler r2 object put/get/delete` | จัดการ R2 objects |
+| `wrangler d1 execute` | รัน SQL กับ D1 database |
+| `wrangler pages deploy` | deploy โปรเจกต์ Pages |
+| `wrangler secret put` | ตั้ง secret (environment variable) ให้ Worker |
+| `wrangler types` | สร้าง TypeScript types จาก bindings |
+
+> ใช้ `npx wrangler <command>` สำหรับ per‑project install หรือ `wrangler <command>` ถ้าติดตั้งแบบ global
+
+### อ้างอิง
+
+- Docs: <https://developers.cloudflare.com/workers/wrangler/>
+- GitHub: <https://github.com/cloudflare/workers-sdk>
 
 ## อ้างอิง
 

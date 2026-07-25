@@ -1,14 +1,14 @@
-# Quick Setup
+# การตั้งค่าด่วน (Quick Setup)
 
-Get Claude Code working with all the tools you need in one shot: the engineer-skills plugin, Context7 for live docs, the Bright Data CLI + skill for web scraping, and the Fallow CLI for codebase intelligence.
+เริ่มใช้งาน Claude Code พร้อมเครื่องมือทั้งหมดที่คุณต้องการในขั้นตอนเดียว: ปลั๊กอิน engineer-skills, Context7 สำหรับดึงเอกสารสด, Bright Data CLI + skill สำหรับ scraping เว็บ และ Fallow CLI สำหรับวิเคราะห์ codebase
 
-Pick your shell and run the **install** block once. That gives you a `ccc` / `cccc` pair to launch Claude Code, plus a `quicksetup` function that wires up the skills. Then just type `quicksetup` to run it.
+เลือก shell ของคุณแล้วรันบล็อก **install** ครั้งเดียว สิ่งนี้จะให้คู่คำสั่ง `ccc` / `cccc` สำหรับเปิด Claude Code พร้อมฟังก์ชัน `quicksetup` ที่เชื่อมต่อ skills ให้ จากนั้นเพียงพิมพ์ `quicksetup` เพื่อรันได้เลย
 
-> `ccc` and `cccc` are convenience wrappers around `claude` — they skip the per-command permission prompt and continue the last session, matching the `--dangerously-skip-permissions` flow the rest of this repo assumes. They call `claude` directly, so they work for anyone, not just the author's private aliases.
+> `ccc` และ `cccc` คือ wrapper สะดวกสำหรับ `claude` — ข้ามการขออนุญาตต่อคำสั่งและต่อเซสชันล่าสุด สอดคล้องกับ flow `--dangerously-skip-permissions` ที่เหลือของ repo นี้สันนิษฐานไว้ พวกมันเรียก `claude` โดยตรง จึงทำงานได้กับทุกคน ไม่ใช่แค่ alias ส่วนตัวของผู้เขียน
 
-## Windows prerequisites (run once)
+## เงื่อนไขเบื้องต้นสำหรับ Windows (รันครั้งเดียว)
 
-Before installing Claude Code on Windows, install Git for Windows, PowerShell 7, Windows Terminal, Node.js (needed by Context7 and the Bright Data CLI), the GitHub CLI, and Python 3.14 with winget, then make PowerShell 7 the default profile for Windows Terminal:
+ก่อนติดตั้ง Claude Code บน Windows ให้ติดตั้ง Git for Windows, PowerShell 7, Windows Terminal, Node.js (ที่ Context7 และ Bright Data CLI ต้องใช้), GitHub CLI, GitLab CLI และ Python 3.14 ด้วย winget จากนั้นตั้งค่าให้ PowerShell 7 เป็นโปรไฟล์เริ่มต้นของ Windows Terminal:
 
 ```powershell
 winget install --id Git.Git -e
@@ -16,27 +16,26 @@ winget install --id Microsoft.PowerShell -e
 winget install --id Microsoft.WindowsTerminal -e
 winget install --id OpenJS.NodeJS.LTS -e
 winget install -e --id GitHub.cli
+winget install --id glab.glab -e
 winget install --id Python.Python.3.14 -e
 
-# Set PowerShell 7 as the default profile in Windows Terminal
-$settingsPath = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
-$ps7 = (Get-Command pwsh).Source
-$settings = Get-Content $settingsPath -Raw | ConvertFrom-Json
-($settings.profiles.list | Where-Object { $_.commandline -eq $ps7 }).guid | ForEach-Object { $settings.defaultProfile = $_ }
-$settings | ConvertTo-Json -Depth 10 | Set-Content $settingsPath
+# ตั้งค่า PowerShell 7 ให้เป็นโปรไฟล์เริ่มต้นใน Windows Terminal
+
 ```
 
-## Install Claude Code
+## ติดตั้ง Claude Code
 
-Install the `claude` CLI first (the rest of this guide calls it). Pick one method.
+ติดตั้ง CLI `claude` ก่อน (คู่มือที่เหลือเรียกใช้มัน) เลือกวิธีใดวิธีหนึ่ง
 
-**Linux prerequisites** — on Debian/Ubuntu, make sure Git (and curl) are installed before the native installer:
+**เงื่อนไขเบื้องต้นสำหรับ Linux** — บน Debian/Ubuntu ให้ติดตั้ง dependencies สำหรับการคอมไพล์ Python และ nvm/pyenv ก่อน:
 
 ```bash
-sudo apt update && sudo apt install -y git curl
+sudo apt update && sudo apt install -y git curl build-essential libssl-dev zlib1g-dev \
+  libbz2-dev libreadline-dev libsqlite3-dev libffi-dev libncursesw5-dev \
+  xz-utils tk-dev libxml2-dev libxmlsec1-dev liblzma-dev
 ```
 
-**Native installer (recommended)** — macOS / Linux / WSL:
+**Native installer (แนะนำ)** — macOS / Linux / WSL:
 
 ```bash
 curl -fsSL https://claude.ai/install.sh | bash
@@ -54,53 +53,66 @@ irm https://claude.ai/install.ps1 | iex
 curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
 ```
 
-Alternatives: `brew install --cask claude-code` (macOS), `winget install Anthropic.ClaudeCode` (Windows), or `npm install -g @anthropic-ai/claude-code` (needs Node.js 22+). See the [Claude Code setup docs](https://code.claude.com/docs/en/setup) for Linux package-manager (apt/dnf/apk) install and version pinning.
+ทางเลือก: `brew install --cask claude-code` (macOS), `winget install Anthropic.ClaudeCode` (Windows) หรือ `npm install -g @anthropic-ai/claude-code` (ต้องใช้ Node.js 22+) ดู [เอกสารติดตั้ง Claude Code](https://code.claude.com/docs/en/setup) สำหรับการติดตั้งผ่าน Linux package manager (apt/dnf/apk) และการกำหนดเวอร์ชัน
 
-Verify, then log in:
+ตรวจสอบแล้วเข้าสู่ระบบ:
 
 ```bash
-claude --version      # prints e.g. 2.1.211 (Claude Code)
-claude                # opens an interactive session and walks you through login
+claude --version      # พิมพ์เช่น 2.1.211 (Claude Code)
+claude                # เปิดเซสชันโต้ตอบแล้วพาเข้าสู่ระบบ
 ```
 
 ## Bash (Linux / macOS)
 
-Add this to `~/.bashrc` (or `~/.zshrc` on macOS), then start a new shell:
+เพิ่มโค้ดนี้ลงใน `~/.bashrc` (หรือ `~/.zshrc` บน macOS) แล้วเริ่ม shell ใหม่:
 
 ```bash
-# Convenience launchers for Claude Code
+# ตัวเปิด Claude Code แบบสะดวก
 ccc()  { claude --dangerously-skip-permissions "$@"; }
 cccc() { claude --dangerously-skip-permissions --continue "$@"; }
 
-# One-shot setup: engineer-skills plugin + Context7 + Bright Data CLI + skill
+# ตั้งค่าแบบรอบเดียว: ปลั๊กอิน engineer-skills + Context7 + Bright Data CLI + skill
 quicksetup() {
-  # 1. engineer-skills plugin
+  # 0. nvm — Node Version Manager (ติดตั้ง Node.js 22 ล่าสุด)
+  curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
+  [ -s "$HOME/.nvm/nvm.sh" ] && . "$HOME/.nvm/nvm.sh"
+  nvm install 22
+  nvm use 22
+
+  # 0b. pyenv — Python Version Manager (ติดตั้ง Python 3.14 ล่าสุด)
+  curl -fsSL https://pyenv.run | bash
+  export PYENV_ROOT="$HOME/.pyenv"
+  [ -s "$PYENV_ROOT/bin/pyenv" ] && eval "$(pyenv init -)"
+  pyenv install 3.14
+  pyenv global 3.14
+
+  # 1. ปลั๊กอิน engineer-skills
   claude plugin marketplace add utarn/engineer-skills
   claude plugin install utarn-skills@utarn
 
-  # 2. Context7 — live library docs
+  # 2. Context7 — เอกสาร library แบบสด
   npx ctx7@latest setup
 
-  # 3. Bright Data — install the CLI globally (needs Node.js, see below)
+  # 3. Bright Data — ติดตั้ง CLI แบบ global
   npm install -g @brightdata/cli
 
-  # 4. Bright Data — register the skills repo as a plugin marketplace
+  # 4. Bright Data — ลงทะเบียน skills repo เป็น plugin marketplace
   claude plugin marketplace add brightdata/skills
 
-  # 5. Bright Data — install the skills plugin from that marketplace
+  # 5. Bright Data — ติดตั้ง skills plugin จาก marketplace นั้น
   claude plugin install brightdata-plugin@brightdata-plugins --scope local
 
-  # 6. Bright Data — one-time login so the CLI is authenticated
+  # 6. Bright Data — login ครั้งเดียวเพื่อยืนยันตัวตนของ CLI
   bdata login
 
-  # 7. Fallow — install the codebase intelligence CLI globally
+  # 7. Fallow — ติดตั้ง CLI วิเคราะห์ codebase แบบ global
   npm install -g fallow
 }
 ```
 
-> **Node.js required:** Steps 3 and 7 need Node.js (>= 20). On macOS install it with `brew install node@20` (or via the official installer); on Linux use your package manager or [NodeSource](https://github.com/nodesource/distributions). On Windows it was already installed via winget in the prerequisites above.
+> **Node.js / Python:** บน Linux ขั้นตอนที่ 0–0b จะติดตั้ง nvm + Node.js 22 และ pyenv + Python 3.14 ให้อัตโนมัติ บน macOS ใช้ `brew install node@22 python@3.14` แทน บน Windows ได้ติดตั้งผ่าน winget ในเงื่อนไขเบื้องต้นด้านบนแล้ว
 
-Run it:
+รันคำสั่ง:
 
 ```bash
 quicksetup
@@ -108,95 +120,97 @@ quicksetup
 
 ## PowerShell (Windows)
 
-### Create / open your PowerShell profile
+### สร้าง / เปิดโปรไฟล์ PowerShell ของคุณ
 
-If the profile file doesn't exist yet, create it and open it in Notepad:
+หากไฟล์โปรไฟล์ยังไม่มีอยู่ ให้สร้างขึ้นแล้วเปิดด้วย Notepad:
 
 ```powershell
 if (!(Test-Path -Path $PROFILE)) { New-Item -ItemType File -Path $PROFILE -Force }; notepad $PROFILE
 ```
 
-Add this to your PowerShell profile, then open a new terminal:
+เพิ่มโค้ดนี้ลงในโปรไฟล์ PowerShell ของคุณ แล้วเปิดเทอร์มินัลใหม่:
 
 ```powershell
-# Convenience launchers for Claude Code
+# ตัวเปิด Claude Code แบบสะดวก
 function ccc  { claude --dangerously-skip-permissions @args }
 function cccc { claude --dangerously-skip-permissions --continue @args }
 
-# One-shot setup: engineer-skills plugin + Context7 + Bright Data CLI + skill
+# ตั้งค่าแบบรอบเดียว: ปลั๊กอิน engineer-skills + Context7 + Bright Data CLI + skill
 function quicksetup {
-  # 1. engineer-skills plugin
+  # 1. ปลั๊กอิน engineer-skills
   claude plugin marketplace add utarn/engineer-skills
   claude plugin install utarn-skills@utarn
 
-  # 2. Context7 — live library docs
+  # 2. Context7 — เอกสาร library แบบสด
   npx ctx7@latest setup
 
-  # 3. Bright Data — install the CLI globally (needs Node.js, see below)
+  # 3. Bright Data — ติดตั้ง CLI แบบ global (ต้องใช้ Node.js ดูด้านล่าง)
   npm install -g @brightdata/cli
 
-  # 4. Bright Data — register the skills repo as a plugin marketplace
+  # 4. Bright Data — ลงทะเบียน skills repo เป็น plugin marketplace
   claude plugin marketplace add brightdata/skills
 
-  # 5. Bright Data — install the skills plugin from that marketplace
+  # 5. Bright Data — ติดตั้ง skills plugin จาก marketplace นั้น
   claude plugin install brightdata-plugin@brightdata-plugins --scope local
 
-  # 6. Bright Data — one-time login so the CLI is authenticated
+  # 6. Bright Data — login ครั้งเดียวเพื่อยืนยันตัวตนของ CLI
   bdata login
 
-  # 7. Fallow — install the codebase intelligence CLI globally
+  # 7. Fallow — ติดตั้ง CLI วิเคราะห์ codebase แบบ global
   npm install -g fallow
 }
 ```
 
-Run it:
+รันคำสั่ง:
 
 ```powershell
 quicksetup
 ```
 
-## Bright Data setup
+## การตั้งค่า Bright Data
 
-The Bright Data CLI (`brightdata` / `bdata`) is installed globally in step 3 of `quicksetup` and authenticated in step 6 via `bdata login`, which opens a browser for OAuth and auto-creates the required proxy zones. You do **not** need an MCP server or a manually-exported API token — the CLI stores its credentials locally after login.
+Bright Data CLI (`brightdata` / `bdata`) ถูกติดตั้งแบบ global ในขั้นตอนที่ 3 ของ `quicksetup` และยืนยันตัวตนในขั้นตอนที่ 6 ผ่าน `bdata login` ซึ่งจะเปิดเบราว์เซอร์สำหรับ OAuth และสร้าง proxy zones ที่จำเป็นโดยอัตโนมัติ คุณ **ไม่ต้อง** ใช้ MCP server หรือ export API token ด้วยมือ — CLI เก็บข้อมูลรับรองไว้ในเครื่องหลังจาก login
 
-- **Headless / SSH** (no browser available): run `bdata login --device` instead and follow the device-code flow.
-- **Non-interactive** (e.g. in a script): run `bdata login --api-key <key>` with an API key from your Bright Data dashboard.
-- Verify it works with `bdata config` or `bdata budget`.
+- **Headless / SSH** (ไม่มีเบราว์เซอร์): รัน `bdata login --device` แทน แล้วทำตามขั้นตอน device-code flow
+- **Non-interactive** (เช่นในสคริปต์): รัน `bdata login --api-key <key>` ด้วย API key จากแดชบอร์ด Bright Data ของคุณ
+- ตรวจสอบว่าใช้งานได้ด้วย `bdata config` หรือ `bdata budget`
 
-The `brightdata-plugin` (steps 4–5, sourced directly from the [brightdata/skills](https://github.com/brightdata/skills) GitHub repo) installs 21 Bright Data skills into Claude Code — including `brightdata-cli`, `search`, `scrape`, `data-feeds`, `competitive-intel`, `discover-api`, `live-research`, and more — so the agent knows how to drive the `bdata` CLI for scraping, SERP search, and 40+ structured-data pipelines. A matching global rule (`~/.claude/rules/brightdata-search.md`) tells Claude to prefer `bdata` over the built-in `WebSearch`/`WebFetch` tools.
+`brightdata-plugin` (ขั้นตอนที่ 4–5 ดึดจาก GitHub repo [brightdata/skills](https://github.com/brightdata/skills) โดยตรง) ติดตั้ง Bright Data skills 21 ตัวเข้าไปใน Claude Code — รวมถึง `brightdata-cli`, `search`, `scrape`, `data-feeds`, `competitive-intel`, `discover-api`, `live-research` และอื่น ๆ — เพื่อให้ agent รู้วิธีขับ `bdata` CLI สำหรับ scraping, ค้น SERP และ structured-data pipelines กว่า 40 แบบ มี global rule ที่ตรงกัน (`~/.claude/rules/brightdata-search.md`) ที่บอก Claude ให้เลือกใช้ `bdata` แทนเครื่องมือ `WebSearch`/`WebFetch` ที่มากับระบบ
 
 ## Fallow — codebase intelligence
 
-[Fallow](https://docs.fallow.tools) is a codebase analyzer for TypeScript/JavaScript that surfaces unused code, circular dependencies, code duplication, complexity hotspots, and architecture boundary violations. It is installed globally in step 7 of `quicksetup` (the `fallow` binary), needs Node.js >= 20, and needs no config for the first run.
+[Fallow](https://docs.fallow.tools) คือตัววิเคราะห์ codebase สำหรับ TypeScript/JavaScript ช่วยหาโค้ดที่ไม่ได้ใช้, การอ้างอิงแบบวงกลม, โค้ดที่ซ้ำกัน, complexity hotspot และการละเมิดขอบเขตสถาปัตยกรรม ติดตั้งแบบ global ในขั้นตอนที่ 7 ของ `quicksetup` (ไบนารี `fallow`) ต้องใช้ Node.js >= 20 และไม่ต้องตั้งค่าในครั้งแรก
 
 ```bash
-# One-off scan — no config needed
-fallow                       # overall summary
+# สแกนครั้งเดียว — ไม่ต้องตั้งค่า
+fallow                       # สรุปภาพรวม
 fallow health                # complexity, maintainability, hotspots, coverage gaps
-fallow dead-code             # unused files, exports, and dependencies
-fallow dupes                 # copy-paste and structural duplication
-fallow audit                 # review changed files (great in a PR)
+fallow dead-code             # ไฟล์, exports และ dependencies ที่ไม่ได้ใช้
+fallow dupes                 # โค้ดที่ซ้ำกันแบบ copy-paste และโครงสร้าง
+fallow audit                 # ตรวจไฟล์ที่เปลี่ยนแปลง (เหมาะใน PR)
 
-# Generate a project config (optional — adds a fallow config file, optionally a Git hook)
+# สร้าง config ของโปรเจกต์ (ไม่บังคับ — เพิ่มไฟล์ fallow config และ Git hook ได้)
 fallow init
 
-# Preview safe auto-fixes before applying
+# ดูตัวอย่าง auto-fix ที่ปลอดภัยก่อนนำไปใช้
 fallow fix --dry-run
 ```
 
-See the [Fallow docs](https://docs.fallow.tools) for CI integration, rule packs, and runtime coverage.
+ดู [เอกสาร Fallow](https://docs.fallow.tools) สำหรับการเชื่อม CI, rule packs และ runtime coverage
 
-## What each step does
+## แต่ละขั้นตอนทำอะไร
 
-| Step | Command | Effect |
-|---|---|---|
-| 1 | `claude plugin marketplace add utarn/engineer-skills` | Register this repo as a Claude Code plugin marketplace. |
-| 2 | `claude plugin install utarn-skills@utarn` | Install the whole engineer-skills bundle as a managed, auto-updating plugin. |
-| 3 | `npx ctx7@latest setup` | Install Context7 into your coding agent so it can fetch live library docs. |
-| 4 | `npm install -g @brightdata/cli` | Install the Bright Data CLI (`brightdata` / `bdata`) globally. Needs Node.js >= 20. |
-| 5 | `claude plugin marketplace add brightdata/skills` | Register the [brightdata/skills](https://github.com/brightdata/skills) GitHub repo as a Claude Code plugin marketplace. |
-| 6 | `claude plugin install brightdata-plugin@brightdata-plugins --scope local` | Install the 21-skill Bright Data plugin from that marketplace into this project. |
-| 7 | `bdata login` | Authenticate the CLI once — opens the browser for OAuth and auto-creates proxy zones. |
-| 8 | `npm install -g fallow` | Install the Fallow codebase intelligence CLI (`fallow`) globally. Needs Node.js >= 20. |
+| ขั้นตอน | คำสั่ง | ผลลัพธ์ |
+|---|---|---|---|
+| 0 | `curl ... nvm install 22` | ติดตั้ง nvm + Node.js 22 (Linux) |
+| 0b | `curl ... pyenv install 3.14` | ติดตั้ง pyenv + Python 3.14 (Linux) |
+| 1 | `claude plugin marketplace add utarn/engineer-skills` | ลงทะเบียน repo นี้เป็น Claude Code plugin marketplace |
+| 2 | `claude plugin install utarn-skills@utarn` | ติดตั้งแพ็กเกจ engineer-skills ทั้งหมดเป็นปลั๊กอินที่จัดการและอัปเดตอัตโนมัติ |
+| 3 | `npx ctx7@latest setup` | ติดตั้ง Context7 ลงใน coding agent ของคุณเพื่อให้ดึงเอกสาร library แบบสดได้ |
+| 4 | `npm install -g @brightdata/cli` | ติดตั้ง Bright Data CLI (`brightdata` / `bdata`) แบบ global ต้องใช้ Node.js >= 20 |
+| 5 | `claude plugin marketplace add brightdata/skills` | ลงทะเบียน GitHub repo [brightdata/skills](https://github.com/brightdata/skills) เป็น Claude Code plugin marketplace |
+| 6 | `claude plugin install brightdata-plugin@brightdata-plugins --scope local` | ติดตั้งปลั๊กอิน Bright Data 21 skills จาก marketplace นั้นเข้าโปรเจกต์นี้ |
+| 7 | `bdata login` | ยืนยันตัวตน CLI ครั้งเดียว — เปิดเบราว์เซอร์สำหรับ OAuth และสร้าง proxy zones อัตโนมัติ |
+| 8 | `npm install -g fallow` | ติดตั้ง CLI วิเคราะห์ codebase ของ Fallow (`fallow`) แบบ global ต้องใช้ Node.js >= 20 |
 
-After `quicksetup` finishes, run `/setup-utarn-skills` once per repo to configure issue tracker, triage labels, and docs location — see the [Quickstart](./README.md#quickstart-30-second-setup) in the README.
+หลังจาก `quicksetup` เสร็จ ให้รัน `/setup-utarn-skills` ครั้งเดียวต่อ repo เพื่อตั้งค่า issue tracker, triage labels และตำแหน่ง docs — ดู [Quickstart](./README.md#quickstart-30-second-setup) ใน README

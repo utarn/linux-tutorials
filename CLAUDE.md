@@ -12,6 +12,7 @@
 ## การเขียนเอกสาร
 
 - ภาษา: เนื้อหาหลักเป็น **ภาษาอังกฤษ** ไฟล์ที่ลงท้ายด้วย `-th.md` (เช่น `QUICKSETUP-th.md`) คือเวอร์ชันภาษาไทย
+- ข้อยกเว้น: `QUICKSETUP.md` เป็นภาษาไทยเท่านั้น (ไม่มีคู่ภาษาอังกฤษ เนื่องจาก `QUICKSETUP-th.md` ถูก rename มาแทนที่)
 - เวลาเพิ่ม/แก้ไฟล์ ให้ดูว่ามีคู่ภาษาไทยหรือไม่ แล้วอัปเดตทั้งคู่ให้ sync กัน
 - ใช้ GitHub-flavored markdown เน้นคำสั่งที่ copy-paste รันได้ทันที
 
@@ -35,10 +36,12 @@ CLAUDE.md / SAMPLE_PROMPT.md            # คู่มือ + ตัวอย�
 DOCKER.md / docker-compose/             # Docker & compose ตัวอย่าง
 ORM.md / DATA_VALIDATION.md             # ORM & validation
 GIT.md / TOKEN.md / SETTING.md           # Git, token, การตั้งค่า
-QUICKSETUP.md / QUICKSETUP-th.md        # ติดตั้งสภาพแวดล้อมด่วน
+QUICKSETUP.md                           # ติดตั้งสภาพแวดล้อมด่วน (ภาษาไทย)
 SETUP_CLAUDE_CODE.md                    # ติดตั้ง Claude Code
 CLOUDFLARE.md / CLOUDFLARE-th.md        # Cloudflare
 OCR.md / MONTE_CARLO.md                 # OCR & Monte Carlo (พร้อมโค้ด)
+PLAYWRIGHT.md                           # Playwright ติดตั้งบน Windows/Linux
+TESTING.md                              # TDD และ Test Framework (Vitest + pytest)
 DBWEAVER.md                             # DBeaver
 ```
 

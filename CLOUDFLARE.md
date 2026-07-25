@@ -203,6 +203,60 @@ Create a custom token under **My Profile → API Tokens → Create Token → Cus
 
 You don't need any API token at all on the host. The dashboard creates the tunnel, the CNAME, and the route; you only copy the tunnel token onto the host (it installs the connector). The permissions above only matter if you are scripting tunnel creation or DNS from the CLI/API.
 
+## 8. Wrangler — Cloudflare Developer Platform CLI
+
+[Wrangler](https://developers.cloudflare.com/workers/wrangler/) is the official CLI for the Cloudflare Developer Platform. You use it to build, test, and deploy full-stack applications — Workers, Pages, R2 Storage, D1 Databases, KV stores, Queues, and more.
+
+### Installation
+
+**Per‑project (recommended)** — pinned in `package.json`, best for CI/CD and team consistency:
+
+```bash
+npm install -D wrangler
+npx wrangler --version
+```
+
+**Global** — available everywhere, good if you only have one Cloudflare project or want it always on `$PATH`:
+
+```bash
+npm install -g wrangler
+wrangler --version
+```
+
+### Quick start
+
+Log in, create a Worker, and deploy:
+
+```bash
+npx wrangler login                     # browser OAuth — stores token locally
+npx wrangler init my-worker            # scaffold a new Worker project
+cd my-worker
+npx wrangler deploy                    # deploy to cloudflareworkers.com
+```
+
+### Common commands
+
+| Command | Description |
+|---|---|
+| `wrangler login` / `wrangler logout` | Authenticate / deauthenticate the CLI |
+| `wrangler init <name>` | Scaffold a new Worker project |
+| `wrangler dev` | Run the Worker locally (with `miniflare`) |
+| `wrangler deploy` | Deploy the Worker to the edge |
+| `wrangler tail` | Stream real-time logs from the deployed Worker |
+| `wrangler kv:key put/get/list` | Manage KV store entries |
+| `wrangler r2 object put/get/delete` | Manage R2 objects |
+| `wrangler d1 execute` | Run SQL against a D1 database |
+| `wrangler pages deploy` | Deploy a Pages project |
+| `wrangler secret put` | Set a secret (environment variable) for the Worker |
+| `wrangler types` | Generate TypeScript types from bindings |
+
+> Use `npx wrangler <command>` for a per‑project install, or `wrangler <command>` if installed globally.
+
+### Reference
+
+- Docs: <https://developers.cloudflare.com/workers/wrangler/>
+- GitHub: <https://github.com/cloudflare/workers-sdk>
+
 ## Reference
 
 - Downloads / install: <https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/>

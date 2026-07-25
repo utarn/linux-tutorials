@@ -13,8 +13,7 @@ mkdir -p ~/.claude && cat > ~/.claude/settings.json << 'EOF'
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-max-claudecode",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-max-claudecode",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4-flash",
-    "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-v4-flash",
-    "BRIGHT_DATA_API_TOKEN": ""
+    "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-v4-flash"
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
@@ -38,8 +37,7 @@ if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Force -Path $dir | Ou
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-max-claudecode",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-max-claudecode",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4-flash",
-    "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-v4-flash",
-    "BRIGHT_DATA_API_TOKEN": ""
+    "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-v4-flash"
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
@@ -55,7 +53,7 @@ if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Force -Path $dir | Ou
 ```bash
 for plugin in \
   pyright-lsp clangd-lsp rust-analyzer-lsp gopls-lsp frontend-design \
-  superpowers playwright brightdata-plugin typescript-lsp jdtls-lsp \
+  superpowers playwright typescript-lsp jdtls-lsp \
   php-lsp kotlin-lsp swift-lsp lua-lsp ruby-lsp liquid-lsp \
   code-review skill-creator github claude-md-management csharp-lsp \
   code-simplifier feature-dev security-guidance; do
@@ -68,7 +66,7 @@ done
 ```powershell
 $plugins = @(
     "pyright-lsp", "clangd-lsp", "rust-analyzer-lsp", "gopls-lsp", "frontend-design",
-    "superpowers", "playwright", "brightdata-plugin", "typescript-lsp", "jdtls-lsp",
+    "superpowers", "playwright", "typescript-lsp", "jdtls-lsp",
     "php-lsp", "kotlin-lsp", "swift-lsp", "lua-lsp", "ruby-lsp", "liquid-lsp",
     "code-review", "skill-creator", "github", "claude-md-management", "csharp-lsp",
     "code-simplifier", "feature-dev", "security-guidance"
@@ -93,16 +91,16 @@ claude plugin marketplace add utarn/engineer-skills
 claude plugin install utarn-skills@utarn
 ```
 
-## Bright Data API key (free tier)
+## Bright Data CLI (free tier)
 
-The Bright Data MCP server needs an API token. Sign up on the Bright Data website (free tier available), create a zone, and copy its API token into `BRIGHT_DATA_API_TOKEN` in your `settings.json` `env` block — or export it in your shell.
+The Bright Data CLI (`brightdata` / `bdata`) authenticates with `bdata login` — no API token needed in `settings.json`. Sign up on the Bright Data website (free tier available), then run:
 
-**Bash** — add to `~/.bashrc` / `~/.zshrc`:
 ```bash
-export BRIGHT_DATA_API_TOKEN="paste-your-token-here"
+bdata login            # browser OAuth — auto-creates cli_unlocker + cli_browser zones
+# or, headless/SSH:
+bdata login --device
+# or, non-interactive with an API key from your dashboard:
+bdata login --api-key "paste-your-token-here"
 ```
 
-**PowerShell** — add to your profile:
-```powershell
-$env:BRIGHT_DATA_API_TOKEN = "paste-your-token-here"
-```
+Verify with `bdata config` or `bdata budget`.

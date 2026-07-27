@@ -23,17 +23,53 @@ winget install --id Python.Python.3.14 -e
 
 ```
 
-## ติดตั้ง Claude Code
+## เงื่อนไขเบื้องต้นสำหรับ Linux (รันครั้งเดียว)
 
-ติดตั้ง CLI `claude` ก่อน (คู่มือที่เหลือเรียกใช้มัน) เลือกวิธีใดวิธีหนึ่ง
-
-**เงื่อนไขเบื้องต้นสำหรับ Linux** — บน Debian/Ubuntu ให้ติดตั้ง dependencies สำหรับการคอมไพล์ Python และ nvm/pyenv ก่อน:
+ก่อนติดตั้ง Claude Code บน Linux (Debian/Ubuntu) ให้ติดตั้ง build dependencies, GitHub CLI, GitLab CLI และ PowerShell 7 ดังนี้ Node.js 22 และ Python 3.14 จะถูกติดตั้งโดย `quicksetup` ผ่าน nvm + pyenv (ขั้นตอนที่ 0–0b):
 
 ```bash
 sudo apt update && sudo apt install -y git curl build-essential libssl-dev zlib1g-dev \
   libbz2-dev libreadline-dev libsqlite3-dev libffi-dev libncursesw5-dev \
   xz-utils tk-dev libxml2-dev libxmlsec1-dev liblzma-dev
+
+# GitHub CLI
+sudo apt install -y gh
+
+# GitLab CLI — ดาวน์โหลด .deb จาก GitLab releases
+GLAB_VER="1.52.0"
+curl -sL "https://gitlab.com/gitlab-org/cli/-/releases/v${GLAB_VER}/downloads/glab_${GLAB_VER}_linux_amd64.deb" -o /tmp/glab.deb \
+  && sudo dpkg -i /tmp/glab.deb
+
+# PowerShell 7 — เพิ่ม Microsoft repository (ปรับ 24.04 เป็นเวอร์ชัน Ubuntu ของคุณ)
+wget -q "https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb" -O /tmp/packages-microsoft-prod.deb \
+  && sudo dpkg -i /tmp/packages-microsoft-prod.deb \
+  && sudo apt update && sudo apt install -y powershell
 ```
+
+## เงื่อนไขเบื้องต้นสำหรับ macOS (รันครั้งเดียว)
+
+ก่อนติดตั้ง Claude Code บน macOS ให้ติดตั้ง Xcode Command Line Tools (รวม Git), Homebrew, GitHub CLI, GitLab CLI และ PowerShell 7 ดังนี้ Node.js 22 และ Python 3.14 จะถูกติดตั้งโดย `quicksetup` ผ่าน nvm + pyenv (ขั้นตอนที่ 0–0b) เช่นเดียวกับ Linux:
+
+```bash
+# Xcode Command Line Tools (รวม Git)
+xcode-select --install
+
+# Homebrew (ถ้ายังไม่มี)
+which brew >/dev/null || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# GitHub CLI
+brew install gh
+
+# GitLab CLI
+brew install glab
+
+# PowerShell 7
+brew install --cask powershell
+```
+
+## ติดตั้ง Claude Code
+
+ติดตั้ง CLI `claude` ก่อน (คู่มือที่เหลือเรียกใช้มัน) เลือกวิธีใดวิธีหนึ่ง:
 
 **Native installer (แนะนำ)** — macOS / Linux / WSL:
 
@@ -110,7 +146,7 @@ quicksetup() {
 }
 ```
 
-> **Node.js / Python:** บน Linux ขั้นตอนที่ 0–0b จะติดตั้ง nvm + Node.js 22 และ pyenv + Python 3.14 ให้อัตโนมัติ บน macOS ใช้ `brew install node@22 python@3.14` แทน บน Windows ได้ติดตั้งผ่าน winget ในเงื่อนไขเบื้องต้นด้านบนแล้ว
+> **Node.js / Python:** ขั้นตอนที่ 0–0b จะติดตั้ง nvm + Node.js 22 และ pyenv + Python 3.14 ให้อัตโนมัติทั้งบน Linux และ macOS (nvm และ pyenv ทำงานได้ทั้งสองระบบ) บน Windows ได้ติดตั้งผ่าน winget ในเงื่อนไขเบื้องต้นด้านบนแล้ว
 
 รันคำสั่ง:
 
@@ -201,9 +237,9 @@ fallow fix --dry-run
 ## แต่ละขั้นตอนทำอะไร
 
 | ขั้นตอน | คำสั่ง | ผลลัพธ์ |
-|---|---|---|---|
-| 0 | `curl ... nvm install 22` | ติดตั้ง nvm + Node.js 22 (Linux) |
-| 0b | `curl ... pyenv install 3.14` | ติดตั้ง pyenv + Python 3.14 (Linux) |
+|---|---|---|
+| 0 | `curl ... nvm install 22` | ติดตั้ง nvm + Node.js 22 (Linux / macOS) |
+| 0b | `curl ... pyenv install 3.14` | ติดตั้ง pyenv + Python 3.14 (Linux / macOS) |
 | 1 | `claude plugin marketplace add utarn/engineer-skills` | ลงทะเบียน repo นี้เป็น Claude Code plugin marketplace |
 | 2 | `claude plugin install utarn-skills@utarn` | ติดตั้งแพ็กเกจ engineer-skills ทั้งหมดเป็นปลั๊กอินที่จัดการและอัปเดตอัตโนมัติ |
 | 3 | `npx ctx7@latest setup` | ติดตั้ง Context7 ลงใน coding agent ของคุณเพื่อให้ดึงเอกสาร library แบบสดได้ |

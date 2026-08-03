@@ -21,9 +21,7 @@ Use the main branch.
 เก็บข้อมูลไว้ในฐานข้อมูล Postgresql ใช้ ORM SQLAlchemy
 องค์ประกอบของแอปพลิเคชันให้รันผ่าน docker compose
 Pydantic + Ruff + Mypy สำหรับตรวจสอบข้อมูลและจัดรูปแบบโค้ด
-กำ Test coverage อย่างน้อย 80% ด้วย pytest
 
-/tdd
 
 ## English
 
@@ -36,7 +34,3 @@ Use Python as the programming language.
 Store data in a PostgreSQL database using SQLAlchemy ORM.
 Compose the application to run through Docker Compose.
 Use Pydantic + Ruff + Mypy for data validation and code formatting.
-Ensure at least 80% test coverage using pytest.
-
-
-/tdd

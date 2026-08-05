@@ -10,10 +10,10 @@ mkdir -p ~/.claude && cat > ~/.claude/settings.json << 'EOF'
   "env": {
     "ANTHROPIC_AUTH_TOKEN": "",
     "ANTHROPIC_BASE_URL": "https:/coding.modelharbor.com",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-5.2",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-5.2",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4-flash",
-    "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-v4-flash"
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-latest",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-ltest",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-flash-latest",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-flash-latest"
   },
   "permissions": {
     "deny": [
@@ -41,7 +41,7 @@ mkdir -p ~/.claude && cat > ~/.claude/settings.json << 'EOF'
   "effortLevel": "high",
   "tui": "default",
   "skipDangerousModePermissionPrompt": true,
-  "autoCompactEnabled": true
+  "autoCompactEnabled": false
 }
 EOF
 ```
@@ -56,10 +56,10 @@ if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Force -Path $dir | Ou
   "env": {
     "ANTHROPIC_AUTH_TOKEN": "",
     "ANTHROPIC_BASE_URL": "https:/coding.modelharbor.com",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-5.2",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-5.2",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4-flash",
-    "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-v4-flash"
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-latest",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-latest",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-flash-latest",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-flash-latest"
   },
   "permissions": {
     "deny": [
@@ -87,7 +87,7 @@ if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Force -Path $dir | Ou
   "effortLevel": "high",
   "tui": "default",
   "skipDangerousModePermissionPrompt": true,
-  "autoCompactEnabled": true
+  "autoCompactEnabled": false
 }
 '@ | Set-Content -Path "$env:USERPROFILE\.claude\settings.json" -NoNewline
 ```
